@@ -16,6 +16,7 @@
         android:layout_marginBottom="16dp"/>
 
     <Button
+        android:id="@+id/search_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
@@ -32,9 +33,11 @@
         app:icon="@drawable/ic_search"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
-        app:iconTint="@color/black" />
+        app:iconTint="@color/black"
+        android:foreground="?attr/selectableItemBackground"/>
 
     <Button
+        android:id="@+id/library_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
@@ -51,9 +54,11 @@
         app:icon="@drawable/ic_library"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
-        app:iconTint="@color/black" />
+        app:iconTint="@color/black"
+        android:foreground="?attr/selectableItemBackground"/>
 
     <Button
+        android:id="@+id/settings_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
@@ -70,7 +75,8 @@
         app:icon="@drawable/ic_settings"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
-        app:iconTint="@color/black" />
+        app:iconTint="@color/black"
+        android:foreground="?attr/selectableItemBackground"/>
 
 
 </LinearLayout>
