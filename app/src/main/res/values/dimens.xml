@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="main_buttons_margin_vertical">8dp</dimen>
+    <dimen name="toolbar_height">60dp</dimen>
+    <dimen name="common_text_size">16sp</dimen>
+    <dimen name="main_buttons_margin_horizontal">16dp</dimen>
+    <dimen name="main_buttons_text_size">22sp</dimen>
+    <dimen name="main_buttons_corner_radius">16dp</dimen>
+    <dimen name="settings_item_height">61dp</dimen>
+    <dimen name="settings_items_content_margin_horizontal">16dp</dimen>
+</resources>
