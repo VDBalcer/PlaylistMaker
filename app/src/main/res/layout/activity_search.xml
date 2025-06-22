@@ -5,13 +5,48 @@
     android:id="@+id/search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".SearchActivity"
-    android:background="?attr/colorSecondary">
+    tools:context=".SearchActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         style="@style/CommonToolbar"
         app:title="@string/search" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="?attr/textInputStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/search_edit_text_padding_horizontal"
+        android:paddingVertical="@dimen/search_edit_text_padding_vertical"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="@dimen/search_edit_text_corner_radius"
+        app:boxCornerRadiusBottomStart="@dimen/search_edit_text_corner_radius"
+        app:boxCornerRadiusTopEnd="@dimen/search_edit_text_corner_radius"
+        app:boxCornerRadiusTopStart="@dimen/search_edit_text_corner_radius"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:endIconDrawable="@drawable/ic_cross"
+        app:endIconMode="clear_text"
+        android:hint=""
+        app:hintEnabled="false"
+        app:startIconDrawable="@drawable/ic_search">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/search_input_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/ys_display_regular"
+            android:gravity="center_vertical"
+            android:hint="@string/search_hint"
+            android:inputType="text"
+            android:paddingVertical="0dp"
+            android:paddingStart="36dp"
+            android:paddingEnd="40dp"
+            android:textColorHint="@color/gray"
+            android:textColor="@color/black"
+            android:textSize="@dimen/common_text_size" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>
