@@ -10,6 +10,9 @@
         <!-- Customize your dark theme here. -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="textInputStyle">@style/SearchFieldStyle</item>
+
+        <item name="thumbTint">@color/blue</item>
+        <item name="trackTint">@color/light_blue</item>
     </style>
 
     <style name="SearchFieldStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -19,4 +22,5 @@
         <item name="startIconTint">@color/black</item>
         <item name="endIconTint">@color/black</item>
     </style>
+
 </resources>

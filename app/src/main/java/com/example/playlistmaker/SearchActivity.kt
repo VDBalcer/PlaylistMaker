@@ -1,13 +1,14 @@
 package com.example.playlistmaker
 
+import android.content.Context
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Toast
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class SearchActivity : AppCompatActivity() {
 
@@ -39,6 +40,14 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
+
+        val textInputLayout = findViewById<TextInputLayout>(R.id.search_input_layout)
+        textInputLayout.setEndIconOnClickListener {
+            inputEditText.text?.clear()
+
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(inputEditText.windowToken, 0)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

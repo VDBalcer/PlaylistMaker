@@ -15,9 +15,11 @@
         app:title="@string/search" />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_input_layout"
         style="?attr/textInputStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint=""
         android:paddingHorizontal="@dimen/search_edit_text_padding_horizontal"
         android:paddingVertical="@dimen/search_edit_text_padding_vertical"
         app:boxBackgroundMode="outline"
@@ -29,7 +31,6 @@
         app:boxStrokeWidthFocused="0dp"
         app:endIconDrawable="@drawable/ic_cross"
         app:endIconMode="clear_text"
-        android:hint=""
         app:hintEnabled="false"
         app:startIconDrawable="@drawable/ic_search">
 
@@ -44,8 +45,8 @@
             android:paddingVertical="0dp"
             android:paddingStart="36dp"
             android:paddingEnd="40dp"
-            android:textColorHint="@color/gray"
             android:textColor="@color/black"
+            android:textColorHint="@color/gray"
             android:textSize="@dimen/common_text_size" />
     </com.google.android.material.textfield.TextInputLayout>
 

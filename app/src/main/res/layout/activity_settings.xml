@@ -12,63 +12,26 @@
         style="@style/CommonToolbar"
         app:title="@string/settings" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_item_height">
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        style="@style/SettingItemTextView"
+        android:text="@string/dark_mode" />
 
-        <com.google.android.material.textview.MaterialTextView
-            style="@style/SettingItemTextView"
-            android:text="@string/dark_mode" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switcher"
-            style="@style/SettingItemIcon" />
-
-    </FrameLayout>
-
-    <FrameLayout
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/share_app"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_item_height">
+        style="@style/SettingItemTextView"
+        android:drawableEnd="@drawable/ic_share"
+        android:text="@string/title_share" />
 
-        <com.google.android.material.textview.MaterialTextView
-            style="@style/SettingItemTextView"
-            android:text="@string/title_share" />
-
-        <ImageView
-            style="@style/SettingItemIcon"
-            android:src="@drawable/ic_share" />
-
-    </FrameLayout>
-
-    <FrameLayout
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/write_support"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_item_height">
+        style="@style/SettingItemTextView"
+        android:drawableEnd="@drawable/ic_support"
+        android:text="@string/title_support" />
 
-        <com.google.android.material.textview.MaterialTextView
-            style="@style/SettingItemTextView"
-            android:text="@string/title_support" />
-
-        <ImageView
-            style="@style/SettingItemIcon"
-            android:src="@drawable/ic_support" />
-
-    </FrameLayout>
-
-    <FrameLayout
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/terms"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_item_height">
-
-        <com.google.android.material.textview.MaterialTextView
-            style="@style/SettingItemTextView"
-            android:text="@string/title_agreement" />
-
-        <ImageView
-            style="@style/SettingItemIcon"
-            android:src="@drawable/ic_arrow_forward" />
-
-    </FrameLayout>
+        style="@style/SettingItemTextView"
+        android:drawableEnd="@drawable/ic_arrow_forward"
+        android:text="@string/title_agreement" />
 
 </LinearLayout>

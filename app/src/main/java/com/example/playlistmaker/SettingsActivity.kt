@@ -3,9 +3,9 @@ package com.example.playlistmaker
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +19,7 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        val shareButton = findViewById<FrameLayout>(R.id.share_app)
+        val shareButton = findViewById<MaterialTextView>(R.id.share_app)
         shareButton.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.setType("text/plain")
@@ -27,8 +27,8 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(shareIntent)
         }
 
-        val supportButton = findViewById<FrameLayout>(R.id.write_support)
-        supportButton.setOnClickListener{
+        val supportButton = findViewById<MaterialTextView>(R.id.write_support)
+        supportButton.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SENDTO)
             shareIntent.data = Uri.parse("mailto:")
             shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.author_email)))
@@ -37,7 +37,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(shareIntent)
         }
 
-        val termsButton = findViewById<FrameLayout>(R.id.terms)
+        val termsButton = findViewById<MaterialTextView>(R.id.terms)
         termsButton.setOnClickListener {
             val termsIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terns_uri)))
             startActivity(termsIntent)
