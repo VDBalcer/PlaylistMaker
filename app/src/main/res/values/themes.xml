@@ -10,9 +10,6 @@
         <!-- Customize your light theme here. -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="textInputStyle">@style/SearchFieldStyle</item>
-
-        <item name="thumbTint">@color/gray</item>
-        <item name="trackTint">@color/light_gray</item>
     </style>
 
     <style name="SearchFieldStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
