@@ -4,102 +4,36 @@
     android:id="@+id/settings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/settings"
-        app:titleTextColor="@color/black" />
+        style="@style/CommonToolbar"
+        app:title="@string/settings" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_item_height">
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        style="@style/SettingItemTextView"
+        android:text="@string/dark_mode"
+        app:thumbTint="@color/switch_thumb_color"
+        app:trackTint="@color/switch_track_color" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center"
-            android:layout_marginHorizontal="@dimen/settings_items_content_margin_horizontal"
-            android:text="@string/dark_mode"
-            android:textColor="@color/black"
-            android:textSize="@dimen/common_text_size" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/share_app"
+        style="@style/SettingItemTextView"
+        android:drawableEnd="@drawable/ic_share"
+        android:text="@string/title_share" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center"
-            android:layout_marginHorizontal="@dimen/settings_items_content_margin_horizontal" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/write_support"
+        style="@style/SettingItemTextView"
+        android:drawableEnd="@drawable/ic_support"
+        android:text="@string/title_support" />
 
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_item_height">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center"
-            android:layout_marginHorizontal="@dimen/settings_items_content_margin_horizontal"
-            android:text="@string/title_share"
-            android:textColor="@color/black"
-            android:textSize="@dimen/common_text_size" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center"
-            android:layout_marginHorizontal="@dimen/settings_items_content_margin_horizontal"
-            android:src="@drawable/ic_share" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_item_height">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center"
-            android:layout_marginHorizontal="@dimen/settings_items_content_margin_horizontal"
-            android:text="@string/title_support"
-            android:textColor="@color/black"
-            android:textSize="@dimen/common_text_size" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center"
-            android:layout_marginHorizontal="@dimen/settings_items_content_margin_horizontal"
-            android:src="@drawable/ic_support" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_item_height">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center"
-            android:layout_marginHorizontal="@dimen/settings_items_content_margin_horizontal"
-            android:text="@string/title_agreement"
-            android:textColor="@color/black"
-            android:textSize="@dimen/common_text_size" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center"
-            android:layout_marginHorizontal="@dimen/settings_items_content_margin_horizontal"
-            android:src="@drawable/ic_arrow_forward" />
-
-    </FrameLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/terms"
+        style="@style/SettingItemTextView"
+        android:drawableEnd="@drawable/ic_arrow_forward"
+        android:text="@string/title_agreement" />
 
 </LinearLayout>

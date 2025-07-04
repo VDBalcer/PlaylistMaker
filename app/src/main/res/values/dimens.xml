@@ -7,5 +7,11 @@
     <dimen name="main_buttons_text_size">22sp</dimen>
     <dimen name="main_buttons_corner_radius">16dp</dimen>
     <dimen name="settings_item_height">61dp</dimen>
-    <dimen name="settings_items_content_margin_horizontal">16dp</dimen>
+    <dimen name="settings_items_padding_horizontal">16dp</dimen>
+    <dimen name="settings_items_padding_vertical">20dp</dimen>
+    <dimen name="heavy_font_weight">500</dimen>
+    <dimen name="regular_font_weight">400</dimen>
+    <dimen name="search_edit_text_corner_radius">8dp</dimen>
+    <dimen name="search_edit_text_padding_horizontal">16dp</dimen>
+    <dimen name="search_edit_text_padding_vertical">8dp</dimen>
 </resources>
