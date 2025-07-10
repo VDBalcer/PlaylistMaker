@@ -1,5 +1,7 @@
 package com.example.playlistmaker.search
 
+import android.content.Context
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -7,14 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.model.TrackModel
+import com.example.playlistmaker.model.Track
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var ivArtwork = itemView.findViewById<ImageView>(R.id.track_artwork_image)
     private var tvTrackTitle = itemView.findViewById<TextView>(R.id.track_title)
     private var tvTrackDescriptor = itemView.findViewById<TextView>(R.id.track_description)
 
-    fun bind(item: TrackModel) {
+    fun bind(item: Track) {
         tvTrackTitle.text = item.trackName
 
         tvTrackDescriptor.text =
@@ -23,12 +25,19 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 item.artistName,
                 item.trackTime
             )
-
+        val cornerRadius = dpToPx(2f, itemView.context)
         Glide.with(itemView)
             .load(item.artworkUrl100)
             .placeholder(R.drawable.track_placeholder)
             .fitCenter()
-            .transform(RoundedCorners(2))
+            .transform(RoundedCorners(cornerRadius))
             .into(ivArtwork)
     }
+}
+
+fun dpToPx(dp: Float, context: Context): Int {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp,
+        context.resources.displayMetrics).toInt()
 }
