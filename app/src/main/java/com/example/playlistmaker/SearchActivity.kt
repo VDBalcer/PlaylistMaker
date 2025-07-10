@@ -7,6 +7,9 @@ import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.mock.MockTracks
+import com.example.playlistmaker.search.TrackAdapter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -48,6 +51,11 @@ class SearchActivity : AppCompatActivity() {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(inputEditText.windowToken, 0)
         }
+
+        val recyclerView = findViewById<RecyclerView>(R.id.track_recycler_view)
+        val trackAdapter = TrackAdapter(MockTracks.trackList)
+        recyclerView.adapter = trackAdapter
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
