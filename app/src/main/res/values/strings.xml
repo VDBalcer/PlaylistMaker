@@ -13,4 +13,5 @@
     <string name="write_support_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="terns_uri">https://yandex.ru/legal/practicum_offer/</string>
     <string name="search_hint">Поиск</string>
+    <string name="track_descriptor">%1$s • %2$s</string>
 </resources>
