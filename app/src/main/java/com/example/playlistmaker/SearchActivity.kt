@@ -53,7 +53,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         val recyclerView = findViewById<RecyclerView>(R.id.track_recycler_view)
-        val trackAdapter = TrackAdapter(MockTracks.trackList)
+        val trackAdapter = TrackAdapter()
+        trackAdapter.tracks = MockTracks.trackList
         recyclerView.adapter = trackAdapter
 
     }

@@ -25,7 +25,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 item.artistName,
                 item.trackTime
             )
-        val cornerRadius = dpToPx(2f, itemView.context)
+        val cornerRadius = dpToPx(CORNER_RADIUS, itemView.context)
         Glide.with(itemView)
             .load(item.artworkUrl100)
             .placeholder(R.drawable.track_placeholder)
@@ -33,6 +33,8 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .transform(RoundedCorners(cornerRadius))
             .into(ivArtwork)
     }
+
+    val CORNER_RADIUS = 2f
 }
 
 fun dpToPx(dp: Float, context: Context): Int {
