@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.implementation
+import org.gradle.kotlin.dsl.libs
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -45,4 +48,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
 }

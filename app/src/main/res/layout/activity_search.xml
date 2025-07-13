@@ -50,4 +50,12 @@
             android:textSize="@dimen/common_text_size" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/track_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_track"
+        tools:itemCount="5"/>
+
 </LinearLayout>
