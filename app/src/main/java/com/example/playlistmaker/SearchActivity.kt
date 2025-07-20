@@ -16,6 +16,14 @@ import com.google.android.material.textfield.TextInputLayout
 class SearchActivity : AppCompatActivity() {
 
     var searchText: String? = null
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(ITUNES_BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    private val iTunesService = retrofit.create(ItunesApi::class.java)
+    private val tracks = ArrayList<Track>()
+    private val trackAdapter = TrackAdapter()
+    private lateinit var placeholder : LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +77,92 @@ class SearchActivity : AppCompatActivity() {
         searchText = savedInstanceState.getString(SEARCH_TEXT)
         val inputEditText = findViewById<TextInputEditText>(R.id.search_input_edit_text)
         inputEditText.setText(searchText)
+    }
+
+    private fun search(text: String, context: Context) {
+        iTunesService.search(text).enqueue(object : Callback<SearchResponse> {
+            override fun onResponse(
+                call: Call<SearchResponse>,
+                response: Response<SearchResponse>
+            ) {
+                tracks.clear()
+                if (response.code() == 200) {
+                    if (response.body()?.results?.isNotEmpty() == true) {
+                        showMessage(null, null, null)
+                        val newTracks = response.body()?.results
+                            ?.map { it.toDomain() }
+                            ?: emptyList()
+                        tracks.addAll(newTracks)
+                    } else {
+                        showMessage(R.drawable.im_not_found, getString(R.string.not_found))
+                    }
+                } else {
+                    showMessage(
+                        R.drawable.im_no_internet,
+                        getString(R.string.internet_error_title),
+                        getString(R.string.internet_error_description),
+                        true
+                    )
+                }
+                trackAdapter.notifyDataSetChanged()
+            }
+
+            override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+                tracks.clear()
+                showMessage(
+                    R.drawable.im_no_internet,
+                    getString(R.string.internet_error_title),
+                    getString(R.string.internet_error_description),
+                    true
+                )
+                trackAdapter.notifyDataSetChanged()
+            }
+        })
+    }
+
+    private fun showMessage(
+        image: Int? = null,
+        title: String? = null,
+        description: String? = null,
+        buttonVisibility: Boolean = false
+    ) {
+        val placeholderImage = findViewById<ImageView>(R.id.placeholder_im)
+        val placeholderTitle = findViewById<TextView>(R.id.placeholder_title)
+        val placeholderDescription = findViewById<TextView>(R.id.placeholder_description)
+        val placeholderButton = findViewById<Button>(R.id.placeholder_button)
+        placeholder = findViewById<LinearLayout>(R.id.placeholder)
+
+
+        if ((image != null) or title.isNullOrEmpty() or description.isNullOrEmpty()) {
+            placeholder.visibility = View.VISIBLE
+        } else {
+            placeholder.visibility = View.GONE
+        }
+        if (image != null) {
+            placeholderImage.setImageResource(image)
+            placeholderImage.visibility = View.VISIBLE
+        } else {
+            placeholderImage.visibility = View.GONE
+        }
+
+        if (!title.isNullOrEmpty()) {
+            placeholderTitle.text = title
+            placeholderTitle.visibility = View.VISIBLE
+        } else {
+            placeholderTitle.visibility = View.GONE
+        }
+        if (!description.isNullOrEmpty()) {
+            placeholderDescription.text = description
+            placeholderDescription.visibility = View.VISIBLE
+        } else {
+            placeholderDescription.visibility = View.GONE
+        }
+
+        if (buttonVisibility) {
+            placeholderButton.visibility = View.VISIBLE
+        } else {
+            placeholderButton.visibility = View.GONE
+        }
     }
 
     companion object {
