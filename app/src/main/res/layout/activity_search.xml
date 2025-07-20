@@ -55,9 +55,47 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/track_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_track"
-        tools:itemCount="5"/>
+        tools:itemCount="5"
+        tools:listitem="@layout/item_track" />
+
+    <LinearLayout
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/placeholder_im"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/placeholder_title"
+            style="@style/PlaceholderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/placeholder_text_margins"
+            android:layout_marginBottom="@dimen/placeholder_text_margins"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/placeholder_description"
+            style="@style/PlaceholderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/placeholder_text_margins"
+            android:layout_marginBottom="@dimen/placeholder_text_margins"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/placeholder_button"
+            style="@style/PlaceholderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/refresh" />
+    </LinearLayout>
 
 </LinearLayout>
