@@ -4,14 +4,27 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.mock.MockTracks
+import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.network.ItunesApi
+import com.example.playlistmaker.network.SearchResponse
 import com.example.playlistmaker.search.TrackAdapter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
@@ -58,13 +71,26 @@ class SearchActivity : AppCompatActivity() {
 
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(inputEditText.windowToken, 0)
+            tracks.clear()
+            trackAdapter.notifyDataSetChanged()
+            showMessage(null, null, null)
         }
 
         val recyclerView = findViewById<RecyclerView>(R.id.track_recycler_view)
-        val trackAdapter = TrackAdapter()
-        trackAdapter.tracks = MockTracks.trackList
+        trackAdapter.tracks = tracks
         recyclerView.adapter = trackAdapter
 
+        inputEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                search(inputEditText.text.toString(), this)
+            }
+            false
+        }
+
+        val placeholderButton = findViewById<Button>(R.id.placeholder_button)
+        placeholderButton.setOnClickListener {
+            search(inputEditText.text.toString(), this)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -167,5 +193,6 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
+        const val ITUNES_BASE_URL = "https://itunes.apple.com"
     }
 }
