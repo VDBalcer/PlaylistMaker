@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.model.Track
-import com.example.playlistmaker.network.ItunesApi
+import com.example.playlistmaker.network.ItunesService
 import com.example.playlistmaker.network.SearchResponse
 import com.example.playlistmaker.search.TrackAdapter
 import com.google.android.material.textfield.TextInputEditText
@@ -23,20 +23,14 @@ import com.google.android.material.textfield.TextInputLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
     var searchText: String? = null
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(ITUNES_BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val iTunesService = retrofit.create(ItunesApi::class.java)
+    private val iTunesService = ItunesService()
     private val tracks = ArrayList<Track>()
     private val trackAdapter = TrackAdapter()
-    private lateinit var placeholder : LinearLayout
+    private lateinit var placeholder: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search(text: String, context: Context) {
-        iTunesService.search(text).enqueue(object : Callback<SearchResponse> {
+        iTunesService.service.search(text).enqueue(object : Callback<SearchResponse> {
             override fun onResponse(
                 call: Call<SearchResponse>,
                 response: Response<SearchResponse>
@@ -193,6 +187,5 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
-        const val ITUNES_BASE_URL = "https://itunes.apple.com"
     }
 }
