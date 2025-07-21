@@ -27,4 +27,9 @@
     <dimen name="track_item_icon_margin_vertical">18dp</dimen>
     <dimen name="track_item_icon_margin_start">8dp</dimen>
     <dimen name="track_item_icon_margin_end">12dp</dimen>
+
+    <dimen name="placeholder_text_size">19sp</dimen>
+    <dimen name="placeholder_text_margins">24dp</dimen>
+    <dimen name="placeholder_button_corner_radius">54dp</dimen>
+    <dimen name="placeholder_button_text_size">14sp</dimen>
 </resources>
