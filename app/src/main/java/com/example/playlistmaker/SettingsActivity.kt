@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.playlistmaker.App.Companion.APP_THEME_PREFERENCES
 import com.example.playlistmaker.App.Companion.DARK_THEME_KEY
-import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
@@ -46,7 +46,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(termsIntent)
         }
 
-        val themeSwitcher = findViewById<MaterialSwitch>(R.id.theme_switcher)
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.theme_switcher)
         themeSwitcher.isChecked = (applicationContext as App).darkTheme
         themeSwitcher.setOnCheckedChangeListener { _, checked ->
             val sharedPrefs = getSharedPreferences(APP_THEME_PREFERENCES, MODE_PRIVATE)
