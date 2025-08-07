@@ -52,6 +52,42 @@
             android:textSize="@dimen/common_text_size" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <LinearLayout
+        android:id="@+id/clicked_tracks_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <TextView
+            style="@style/PlaceholderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="12dp"
+            android:text="@string/clicked_tracks_title" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tracks_history_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_track" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/clear_history_button"
+            style="@style/PlaceholderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/clear_history_button_text" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/track_recycler_view"
         android:layout_width="match_parent"
@@ -72,7 +108,7 @@
             android:id="@+id/placeholder_im"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/placeholder_title"
@@ -80,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/placeholder_text_margins"
-            android:layout_marginBottom="@dimen/placeholder_text_margins"/>
+            android:layout_marginBottom="@dimen/placeholder_text_margins" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/placeholder_description"
@@ -88,7 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/placeholder_text_margins"
-            android:layout_marginBottom="@dimen/placeholder_text_margins"/>
+            android:layout_marginBottom="@dimen/placeholder_text_margins" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/placeholder_button"
