@@ -13,6 +13,7 @@
         app:title="@string/settings" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/theme_switcher"
         style="@style/SettingItemTextView"
         android:text="@string/dark_mode"
         app:thumbTint="@color/switch_thumb_color"

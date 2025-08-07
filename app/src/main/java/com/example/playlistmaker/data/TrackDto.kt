@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class TrackDto(
+    val trackId: Int?,
     val trackName: String?,
     val artistName: String?,
     val trackTimeMillis: Long?,
@@ -12,6 +13,7 @@ data class TrackDto(
 ) {
     fun toDomain(): Track {
         return Track(
+            trackId = trackId?:0,
             trackName = trackName.orEmpty(),
             artistName = artistName.orEmpty(),
             trackTime = trackTimeMillis?.let {

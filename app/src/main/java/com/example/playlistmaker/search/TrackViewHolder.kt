@@ -11,7 +11,10 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.model.Track
 
-class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class TrackViewHolder(
+    itemView: View,
+    val onTrackClick: (Track) -> Unit = {}
+) : RecyclerView.ViewHolder(itemView) {
     private var ivArtwork = itemView.findViewById<ImageView>(R.id.track_artwork_image)
     private var tvTrackTitle = itemView.findViewById<TextView>(R.id.track_title)
     private var tvTrackDescriptor = itemView.findViewById<TextView>(R.id.track_description)
@@ -32,6 +35,10 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .fitCenter()
             .transform(RoundedCorners(cornerRadius))
             .into(ivArtwork)
+
+        itemView.setOnClickListener {
+            onTrackClick(item)
+        }
     }
 
     val CORNER_RADIUS = 2f
@@ -41,5 +48,6 @@ fun dpToPx(dp: Float, context: Context): Int {
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,
         dp,
-        context.resources.displayMetrics).toInt()
+        context.resources.displayMetrics
+    ).toInt()
 }

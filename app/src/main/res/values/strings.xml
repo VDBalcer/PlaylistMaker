@@ -18,5 +18,7 @@
     <string name="not_found">Ничего не нашлось</string>
     <string name="internet_error_title">Проблемы со связью</string>
     <string name="internet_error_description">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="clear_history_button_text">Очистить историю</string>
+    <string name="clicked_tracks_title">Вы искали</string>
 
 </resources>
