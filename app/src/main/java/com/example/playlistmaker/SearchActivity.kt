@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,6 +20,7 @@ import com.example.playlistmaker.model.Track
 import com.example.playlistmaker.network.ItunesService
 import com.example.playlistmaker.network.SearchResponse
 import com.example.playlistmaker.search.SearchHistory
+import com.example.playlistmaker.search.SearchHistory.Companion.TRACKS_KEY
 import com.example.playlistmaker.search.TrackAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -55,14 +57,24 @@ class SearchActivity : AppCompatActivity() {
 
         // Подготовка данных для отображения истории треков
         historyPreferences = getSharedPreferences(HISTORY_PREFERENCES, MODE_PRIVATE)
+        val listener = OnSharedPreferenceChangeListener{ _, key ->
+            if (key == TRACKS_KEY) {
+                tracksHistory = searchHistory.getTracksHistory()
+                tracksHistoryAdapter.tracks = tracksHistory
+                tracksHistoryAdapter.notifyDataSetChanged()
+            }
+        }
+        historyPreferences.registerOnSharedPreferenceChangeListener(listener)
         searchHistory = SearchHistory(historyPreferences)
-        tracksHistory = searchHistory.getTracksHistory()
         tracksHistoryAdapter = TrackAdapter { clickedTrack ->
             searchHistory.addTrackToHistory(clickedTrack)
             tracksHistory = searchHistory.getTracksHistory()
             tracksHistoryAdapter.tracks = tracksHistory
             tracksHistoryAdapter.notifyDataSetChanged()
         }
+        tracksHistory = searchHistory.getTracksHistory()
+        tracksHistoryAdapter.tracks = tracksHistory
+        tracksHistoryAdapter.notifyDataSetChanged()
         val historyLayout = findViewById<LinearLayout>(R.id.clicked_tracks_history)
         val historyRecyclerView = findViewById<RecyclerView>(R.id.tracks_history_recycler_view)
         historyRecyclerView.adapter = tracksHistoryAdapter
@@ -75,13 +87,13 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchText = s.toString()
-                tracksHistory = searchHistory.getTracksHistory()
-                tracksHistoryAdapter.tracks = tracksHistory
-                tracksHistoryAdapter.notifyDataSetChanged()
+
                 if (inputEditText.hasFocus()
                     && searchText?.isEmpty() == true
                     && tracksHistory.isNotEmpty()
                 ) {
+                    tracks.clear()
+                    trackAdapter.notifyDataSetChanged()
                     historyLayout.visibility = View.VISIBLE
                 } else historyLayout.visibility = View.GONE
             }
@@ -94,9 +106,7 @@ class SearchActivity : AppCompatActivity() {
 
         // Логика отображения истории
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
-            tracksHistory = searchHistory.getTracksHistory()
-            tracksHistoryAdapter.tracks = tracksHistory
-            tracksHistoryAdapter.notifyDataSetChanged()
+
             if (hasFocus
                 && inputEditText.text.isNullOrEmpty()
                 && tracksHistory.isNotEmpty()
@@ -116,7 +126,6 @@ class SearchActivity : AppCompatActivity() {
         // Обработчик крестика в поиске
         textInputLayout.setEndIconOnClickListener {
             inputEditText.text?.clear()
-
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(inputEditText.windowToken, 0)
             tracks.clear()
@@ -129,7 +138,7 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.adapter = trackAdapter
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            if (actionId == EditorInfo.IME_ACTION_DONE && inputEditText.text!!.isNotBlank()) {
                 search(inputEditText.text.toString(), this)
             }
             false
@@ -144,9 +153,7 @@ class SearchActivity : AppCompatActivity() {
         val cleanHistoryButton = findViewById<MaterialButton>(R.id.clear_history_button)
         cleanHistoryButton.setOnClickListener {
             searchHistory.clearHistory()
-            tracksHistory = searchHistory.getTracksHistory()
-            tracksHistoryAdapter.tracks = tracksHistory
-            tracksHistoryAdapter.notifyDataSetChanged()
+
             historyLayout.visibility = View.GONE
         }
     }
