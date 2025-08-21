@@ -7,6 +7,7 @@
     <color name="gray">#AEAFB4</color>
     <color name="light_gray">#E6E8EB</color>
     <color name="transparent">#00000000</color>
+    <color name="red_heart">#F56B6C</color>
 
     <color name="switch_thumb_active_color">#3772E7</color>
     <color name="switch_thumb_inactive_color">#AEAFB4</color>
@@ -22,4 +23,6 @@
     <color name="placeholder_button_color">@color/black</color>
     <color name="placeholder_button_text_color">@color/white</color>
     <color name="placeholder_image_primary_color">@color/black</color>
+
+    <color name="track_player_side_buttons_color">#401A1B22</color>
 </resources>

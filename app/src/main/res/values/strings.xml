@@ -20,5 +20,11 @@
     <string name="internet_error_description">Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="clear_history_button_text">Очистить историю</string>
     <string name="clicked_tracks_title">Вы искали</string>
+    <string name="track_artwork_image_description">Изображение альбома трека</string>
+    <string name="country_title">Страна</string>
+    <string name="genre_title">Жанр</string>
+    <string name="year_title">Год</string>
+    <string name="album_title">Альбом</string>
+    <string name="track_time_title">Длительность</string>
 
 </resources>
