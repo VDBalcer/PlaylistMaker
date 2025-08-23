@@ -5,7 +5,7 @@ import com.example.playlistmaker.model.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistory(private val preferences: SharedPreferences) {
+class SearchHistory(private val preferences: SharedPreferences, private val gson : Gson = Gson()) {
 
     fun addTrackToHistory(newTrack: Track) {
         val updated = getUpdatedTrackList(newTrack)
@@ -32,12 +32,12 @@ class SearchHistory(private val preferences: SharedPreferences) {
         val existingIndex = tracks.indexOfFirst { it.trackId == newTrack.trackId }
         if (existingIndex != -1) tracks.removeAt(existingIndex)
         tracks.add(0, newTrack)
-        if (tracks.size > 10) tracks.subList(10, tracks.size).clear()
+        if (tracks.size > TRACKS_COUNT) tracks.subList(TRACKS_COUNT, tracks.size).clear()
         return tracks
     }
 
     companion object {
         const val TRACKS_KEY = "searched_tracks"
-        private val gson = Gson()
+        const val TRACKS_COUNT = 10
     }
 }
