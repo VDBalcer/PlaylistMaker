@@ -2,6 +2,7 @@ package com.example.playlistmaker.data
 
 import com.example.playlistmaker.model.Track
 import java.text.SimpleDateFormat
+import java.time.OffsetDateTime
 import java.util.Locale
 
 data class TrackDto(
@@ -9,11 +10,15 @@ data class TrackDto(
     val trackName: String?,
     val artistName: String?,
     val trackTimeMillis: Long?,
-    val artworkUrl100: String?
+    val artworkUrl100: String?,
+    val collectionName: String?,
+    val releaseDate: String?,
+    val primaryGenreName: String?,
+    val country: String?
 ) {
     fun toDomain(): Track {
         return Track(
-            trackId = trackId?:0,
+            trackId = trackId ?: 0,
             trackName = trackName.orEmpty(),
             artistName = artistName.orEmpty(),
             trackTime = trackTimeMillis?.let {
@@ -22,7 +27,11 @@ data class TrackDto(
                     Locale.getDefault()
                 ).format(it)
             } ?: "",
-            artworkUrl100 = artworkUrl100.orEmpty()
+            artworkUrl100 = artworkUrl100.orEmpty(),
+            collectionName = collectionName.orEmpty(),
+            releaseDate = OffsetDateTime.parse(releaseDate),
+            primaryGenreName = primaryGenreName.orEmpty(),
+            country = country.orEmpty()
         )
     }
 }
