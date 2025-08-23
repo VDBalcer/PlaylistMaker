@@ -29,7 +29,7 @@ data class TrackDto(
             } ?: "",
             artworkUrl100 = artworkUrl100.orEmpty(),
             collectionName = collectionName.orEmpty(),
-            releaseDate = OffsetDateTime.parse(releaseDate),
+            releaseDate = releaseDate.orEmpty(),
             primaryGenreName = primaryGenreName.orEmpty(),
             country = country.orEmpty()
         )

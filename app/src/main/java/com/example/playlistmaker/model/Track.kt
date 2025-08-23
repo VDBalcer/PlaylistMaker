@@ -12,7 +12,7 @@ data class Track(
     val trackTime: String, // Продолжительность трека
     val artworkUrl100: String, // Ссылка на изображение обложки
     val collectionName: String = "",
-    val releaseDate: OffsetDateTime? = null,
+    val releaseDate: String = "",
     val primaryGenreName: String = "",
     val country: String = ""
 ) : Parcelable
