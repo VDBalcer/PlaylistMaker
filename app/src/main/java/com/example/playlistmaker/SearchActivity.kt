@@ -74,7 +74,7 @@ class SearchActivity : AppCompatActivity() {
             tracksHistoryAdapter.notifyDataSetChanged()
 
             val intent = Intent(this, TrackPlayerActivity::class.java)
-            intent.putExtra("track", clickedTrack)
+            intent.putExtra(TrackPlayerActivity.TRACK, clickedTrack)
             startActivity(intent)
         }
         tracksHistory = searchHistory.getTracksHistory()

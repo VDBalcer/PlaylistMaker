@@ -20,11 +20,12 @@ class TrackPlayerActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.setNavigationOnClickListener {
             finish()
         }
 
-        val track = intent.getParcelableExtra<Track>("track")
+        val track = intent.getParcelableExtra<Track>(TRACK)
         Glide.with(this)
             .load(track?.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.track_placeholder)
@@ -57,5 +58,6 @@ class TrackPlayerActivity : AppCompatActivity() {
 
     companion object {
         const val ARTWORK_RADIUS = 8f
+        const val TRACK = "track"
     }
 }
