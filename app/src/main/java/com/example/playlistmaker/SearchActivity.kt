@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
@@ -71,6 +72,10 @@ class SearchActivity : AppCompatActivity() {
             tracksHistory = searchHistory.getTracksHistory()
             tracksHistoryAdapter.tracks = tracksHistory
             tracksHistoryAdapter.notifyDataSetChanged()
+
+            val intent = Intent(this, TrackPlayerActivity::class.java)
+            intent.putExtra(TrackPlayerActivity.TRACK, clickedTrack)
+            startActivity(intent)
         }
         tracksHistory = searchHistory.getTracksHistory()
         tracksHistoryAdapter.tracks = tracksHistory
@@ -121,6 +126,10 @@ class SearchActivity : AppCompatActivity() {
             tracksHistory = searchHistory.getTracksHistory()
             tracksHistoryAdapter.tracks = tracksHistory
             tracksHistoryAdapter.notifyDataSetChanged()
+
+            val intent = Intent(this, TrackPlayerActivity::class.java)
+            intent.putExtra("track", clickedTrack)
+            startActivity(intent)
         }
 
         // Обработчик крестика в поиске

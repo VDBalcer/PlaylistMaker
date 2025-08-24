@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 class App : Application() {
 
     var darkTheme = false
+        private set
 
     override fun onCreate() {
         super.onCreate()
@@ -15,7 +16,7 @@ class App : Application() {
         switchTheme(darkTheme)
     }
 
-    fun switchTheme(darkThemeEnabled: Boolean){
+    fun switchTheme(darkThemeEnabled: Boolean) {
         darkTheme = darkThemeEnabled
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) {
@@ -24,6 +25,14 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
+    }
+
+    fun changeTheme(checked: Boolean) {
+        val sharedPrefs = getSharedPreferences(APP_THEME_PREFERENCES, MODE_PRIVATE)
+        sharedPrefs.edit()
+            .putBoolean(DARK_THEME_KEY, checked)
+            .apply()
+        (applicationContext as App).switchTheme(checked)
     }
 
     companion object {

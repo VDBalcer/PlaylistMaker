@@ -22,4 +22,6 @@
     <color name="placeholder_button_color">@color/white</color>
     <color name="placeholder_button_text_color">@color/black</color>
     <color name="placeholder_image_primary_color">@color/white</color>
+
+    <color name="track_player_side_buttons_color">#40FFFFFF</color>
 </resources>

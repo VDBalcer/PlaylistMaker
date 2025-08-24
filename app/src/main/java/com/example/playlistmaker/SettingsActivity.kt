@@ -5,8 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.example.playlistmaker.App.Companion.APP_THEME_PREFERENCES
-import com.example.playlistmaker.App.Companion.DARK_THEME_KEY
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
@@ -49,11 +47,7 @@ class SettingsActivity : AppCompatActivity() {
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.theme_switcher)
         themeSwitcher.isChecked = (applicationContext as App).darkTheme
         themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            val sharedPrefs = getSharedPreferences(APP_THEME_PREFERENCES, MODE_PRIVATE)
-            sharedPrefs.edit()
-                .putBoolean(DARK_THEME_KEY, checked)
-                .apply()
-            (applicationContext as App).switchTheme(checked)
+            (application as App).changeTheme(checked)
         }
     }
 }

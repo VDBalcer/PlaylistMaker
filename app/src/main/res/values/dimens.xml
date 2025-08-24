@@ -32,4 +32,11 @@
     <dimen name="placeholder_text_margins">24dp</dimen>
     <dimen name="placeholder_button_corner_radius">54dp</dimen>
     <dimen name="placeholder_button_text_size">14sp</dimen>
+
+    <dimen name="track_player_title_text_size">22sp</dimen>
+    <dimen name="track_player_artist_name_text_size">14sp</dimen>
+    <dimen name="track_player_timer_text_size">14sp</dimen>
+    <dimen name="track_player_side_guideline">24dp</dimen>
+    <dimen name="track_player_additional_buttons_size">51dp</dimen>
+    <dimen name="track_player_main_button_size">100dp</dimen>
 </resources>
