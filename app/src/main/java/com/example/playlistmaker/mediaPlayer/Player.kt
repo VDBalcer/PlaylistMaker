@@ -52,7 +52,7 @@ class Player(val trackUrl: String, val playButton: ImageButton) {
 
     fun getCurrentPosition(): Int {
         return when (playerState) {
-            STATE_DEFAULT -> 0
+            STATE_DEFAULT, STATE_PREPARED -> 0
             else -> mediaPlayer.currentPosition
         }
     }
