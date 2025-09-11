@@ -1,6 +1,6 @@
 package com.example.playlistmaker.mock
 
-import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.domain.models.Track
 
 object MockTracks {
     val trackList = listOf(

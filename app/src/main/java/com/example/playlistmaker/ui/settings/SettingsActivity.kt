@@ -1,10 +1,12 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.settings
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.example.playlistmaker.App
+import com.example.playlistmaker.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
@@ -45,9 +47,10 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.theme_switcher)
-        themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        themeSwitcher.isChecked = (applicationContext as App).themeInteractor.isDarkTheme()
         themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            (application as App).changeTheme(checked)
+            (applicationContext as App).themeInteractor.updateTheme(checked)
+            (applicationContext as App).switchTheme(checked)
         }
     }
 }

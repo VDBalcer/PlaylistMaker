@@ -1,10 +1,9 @@
-package com.example.playlistmaker.mediaPlayer
+package com.example.playlistmaker.domain.impl
 
 import android.media.MediaPlayer
-import android.widget.ImageButton
-import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.PlayerInteractor
 
-class Player(val trackUrl: String, val playButton: ImageButton) {
+class PlayerInteractorImpl(trackUrl: String) : PlayerInteractor {
     private val mediaPlayer = MediaPlayer()
     private var playerState = STATE_DEFAULT
 
@@ -12,28 +11,24 @@ class Player(val trackUrl: String, val playButton: ImageButton) {
         mediaPlayer.setDataSource(trackUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            playButton.isEnabled = true
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            playButton.setImageResource(R.drawable.ic_play)
             playerState = STATE_PREPARED
         }
     }
 
-    fun startPlayer() {
+    override fun startPlayer() {
         mediaPlayer.start()
-        playButton.setImageResource(R.drawable.ic_stop)
         playerState = STATE_PLAYING
     }
 
-    fun pausePlayer() {
+    override fun pausePlayer() {
         mediaPlayer.pause()
-        playButton.setImageResource(R.drawable.ic_play)
         playerState = STATE_PAUSED
     }
 
-    fun playbackControl() {
+    override fun playbackControl() {
         when (playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
@@ -45,16 +40,29 @@ class Player(val trackUrl: String, val playButton: ImageButton) {
         }
     }
 
-    fun release() {
+    override fun release() {
         playerState = STATE_DEFAULT
         mediaPlayer.release()
     }
 
-    fun getCurrentPosition(): Int {
+    override fun getCurrentPosition(): Int {
         return when (playerState) {
             STATE_DEFAULT, STATE_PREPARED -> 0
             else -> mediaPlayer.currentPosition
         }
+    }
+
+    override fun isTrackPlaying(): Boolean {
+        when (playerState) {
+            STATE_PLAYING -> {
+                return true
+            }
+
+            STATE_PREPARED, STATE_PAUSED -> {
+                return false
+            }
+        }
+        return false
     }
 
 
