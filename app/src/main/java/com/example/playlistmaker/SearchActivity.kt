@@ -5,14 +5,16 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -38,18 +40,31 @@ class SearchActivity : AppCompatActivity() {
     private val tracks = ArrayList<Track>()
     private lateinit var trackAdapter: TrackAdapter
 
-    private lateinit var placeholder: LinearLayout
-
     private lateinit var historyPreferences: SharedPreferences
     private lateinit var searchHistory: SearchHistory
     private lateinit var tracksHistory: List<Track>
     private lateinit var tracksHistoryAdapter: TrackAdapter
+
+    private val handler = Handler(Looper.getMainLooper())
+    private var searchRunnable: Runnable? = null
+
+    private lateinit var tracksRecyclerView: RecyclerView
+    private lateinit var placeholder: LinearLayout
+    private lateinit var historyLayout: LinearLayout
+    private lateinit var progressBar: ProgressBar
+
+    private var isTrackClickAllowed = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        tracksRecyclerView = findViewById(R.id.track_recycler_view)
+        placeholder = findViewById(R.id.placeholder)
+        historyLayout = findViewById(R.id.clicked_tracks_history)
+        progressBar = findViewById(R.id.progressBar)
+
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener {
@@ -58,7 +73,7 @@ class SearchActivity : AppCompatActivity() {
 
         // Подготовка данных для отображения истории треков
         historyPreferences = getSharedPreferences(HISTORY_PREFERENCES, MODE_PRIVATE)
-        val listener = OnSharedPreferenceChangeListener{ _, key ->
+        val listener = OnSharedPreferenceChangeListener { _, key ->
             if (key == TRACKS_KEY) {
                 tracksHistory = searchHistory.getTracksHistory()
                 tracksHistoryAdapter.tracks = tracksHistory
@@ -73,14 +88,15 @@ class SearchActivity : AppCompatActivity() {
             tracksHistoryAdapter.tracks = tracksHistory
             tracksHistoryAdapter.notifyDataSetChanged()
 
-            val intent = Intent(this, TrackPlayerActivity::class.java)
-            intent.putExtra(TrackPlayerActivity.TRACK, clickedTrack)
-            startActivity(intent)
+            if (clickDebounce()) {
+                val intent = Intent(this, TrackPlayerActivity::class.java)
+                intent.putExtra(TrackPlayerActivity.TRACK, clickedTrack)
+                startActivity(intent)
+            }
         }
         tracksHistory = searchHistory.getTracksHistory()
         tracksHistoryAdapter.tracks = tracksHistory
         tracksHistoryAdapter.notifyDataSetChanged()
-        val historyLayout = findViewById<LinearLayout>(R.id.clicked_tracks_history)
         val historyRecyclerView = findViewById<RecyclerView>(R.id.tracks_history_recycler_view)
         historyRecyclerView.adapter = tracksHistoryAdapter
 
@@ -100,7 +116,12 @@ class SearchActivity : AppCompatActivity() {
                     tracks.clear()
                     trackAdapter.notifyDataSetChanged()
                     historyLayout.visibility = View.VISIBLE
-                } else historyLayout.visibility = View.GONE
+                    tracksRecyclerView.visibility = View.GONE
+                    progressBar.visibility = View.GONE
+                    searchRunnable?.let { handler.removeCallbacks(it) }
+                } else {
+                    searchDebounce(searchText!!)
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -111,7 +132,6 @@ class SearchActivity : AppCompatActivity() {
 
         // Логика отображения истории
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
-
             if (hasFocus
                 && inputEditText.text.isNullOrEmpty()
                 && tracksHistory.isNotEmpty()
@@ -127,9 +147,11 @@ class SearchActivity : AppCompatActivity() {
             tracksHistoryAdapter.tracks = tracksHistory
             tracksHistoryAdapter.notifyDataSetChanged()
 
-            val intent = Intent(this, TrackPlayerActivity::class.java)
-            intent.putExtra("track", clickedTrack)
-            startActivity(intent)
+            if (clickDebounce()) {
+                val intent = Intent(this, TrackPlayerActivity::class.java)
+                intent.putExtra("track", clickedTrack)
+                startActivity(intent)
+            }
         }
 
         // Обработчик крестика в поиске
@@ -142,20 +164,12 @@ class SearchActivity : AppCompatActivity() {
             showMessage(null, null, null)
         }
 
-        val recyclerView = findViewById<RecyclerView>(R.id.track_recycler_view)
         trackAdapter.tracks = tracks
-        recyclerView.adapter = trackAdapter
-
-        inputEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE && inputEditText.text!!.isNotBlank()) {
-                search(inputEditText.text.toString(), this)
-            }
-            false
-        }
+        tracksRecyclerView.adapter = trackAdapter
 
         val placeholderButton = findViewById<Button>(R.id.placeholder_button)
         placeholderButton.setOnClickListener {
-            search(inputEditText.text.toString(), this)
+            searchDebounce(inputEditText.text.toString())
         }
 
         // Обработка нажатия на Очистить историю
@@ -182,45 +196,64 @@ class SearchActivity : AppCompatActivity() {
         tracksHistoryAdapter.notifyDataSetChanged()
     }
 
-    private fun search(text: String, context: Context) {
-        iTunesService.service.search(text).enqueue(object : Callback<SearchResponse> {
-            override fun onResponse(
-                call: Call<SearchResponse>,
-                response: Response<SearchResponse>
-            ) {
-                tracks.clear()
-                if (response.code() == 200) {
-                    if (response.body()?.results?.isNotEmpty() == true) {
-                        showMessage(null, null, null)
-                        val newTracks = response.body()?.results
-                            ?.map { it.toDomain() }
-                            ?: emptyList()
-                        tracks.addAll(newTracks)
+    override fun onDestroy() {
+        super.onDestroy()
+        searchRunnable?.let { handler.removeCallbacks(it) }
+    }
+
+    private fun searchDebounce(text: String) {
+        searchRunnable?.let { handler.removeCallbacks(it) }
+
+        searchRunnable = Runnable {
+            iTunesService.service.search(text).enqueue(object : Callback<SearchResponse> {
+                override fun onResponse(
+                    call: Call<SearchResponse>,
+                    response: Response<SearchResponse>
+                ) {
+                    progressBar.visibility = View.GONE
+                    tracks.clear()
+                    if (response.code() == 200) {
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            showMessage(null, null, null)
+                            val newTracks = response.body()?.results
+                                ?.map { it.toDomain() }
+                                ?: emptyList()
+                            tracks.addAll(newTracks)
+                            tracksRecyclerView.visibility = View.VISIBLE
+                        } else {
+                            showMessage(R.drawable.im_not_found, getString(R.string.not_found))
+                        }
                     } else {
-                        showMessage(R.drawable.im_not_found, getString(R.string.not_found))
+                        showMessage(
+                            R.drawable.im_no_internet,
+                            getString(R.string.internet_error_title),
+                            getString(R.string.internet_error_description),
+                            true
+                        )
                     }
-                } else {
+                    trackAdapter.notifyDataSetChanged()
+                }
+
+                override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+                    progressBar.visibility = View.GONE
+                    tracks.clear()
                     showMessage(
                         R.drawable.im_no_internet,
                         getString(R.string.internet_error_title),
                         getString(R.string.internet_error_description),
                         true
                     )
+                    trackAdapter.notifyDataSetChanged()
                 }
-                trackAdapter.notifyDataSetChanged()
-            }
+            })
+        }
 
-            override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                tracks.clear()
-                showMessage(
-                    R.drawable.im_no_internet,
-                    getString(R.string.internet_error_title),
-                    getString(R.string.internet_error_description),
-                    true
-                )
-                trackAdapter.notifyDataSetChanged()
-            }
-        })
+        tracksRecyclerView.visibility = View.GONE
+        placeholder.visibility = View.GONE
+        historyLayout.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+
+        handler.postDelayed(searchRunnable!!, SEARCH_DEBOUNCE_DELAY)
     }
 
     private fun showMessage(
@@ -233,8 +266,6 @@ class SearchActivity : AppCompatActivity() {
         val placeholderTitle = findViewById<TextView>(R.id.placeholder_title)
         val placeholderDescription = findViewById<TextView>(R.id.placeholder_description)
         val placeholderButton = findViewById<Button>(R.id.placeholder_button)
-        placeholder = findViewById(R.id.placeholder)
-
 
         if ((image != null) || title.isNullOrEmpty() || description.isNullOrEmpty()) {
             placeholder.visibility = View.VISIBLE
@@ -268,8 +299,19 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun clickDebounce(): Boolean {
+        val current = isTrackClickAllowed
+        if (isTrackClickAllowed) {
+            isTrackClickAllowed = false
+            handler.postDelayed({ isTrackClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
         const val HISTORY_PREFERENCES = "search_history_preferences"
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
+        const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
