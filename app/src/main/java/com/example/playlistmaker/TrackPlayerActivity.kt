@@ -19,6 +19,8 @@ import java.util.Locale
 class TrackPlayerActivity : AppCompatActivity() {
     lateinit var player: Player
     private var mainThreadHandler: Handler? = null
+    private val timerFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
+    private lateinit var timerRunnable: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,25 +68,27 @@ class TrackPlayerActivity : AppCompatActivity() {
         val playButton = findViewById<ImageButton>(R.id.main_player_button)
         player = Player(track!!.previewUrl, playButton)
         val trackTimer = findViewById<AppCompatTextView>(R.id.track_timer)
-        val trackTime = object: Runnable {
+        timerRunnable = object: Runnable {
             override fun run() {
-                trackTimer.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(player.getCurrentPosition())
+                trackTimer.text = timerFormat.format(player.getCurrentPosition())
                 mainThreadHandler?.postDelayed(this, DELAY)
             }
         }
         playButton.setOnClickListener {
             player.playbackControl()
-            mainThreadHandler?.post(trackTime)
+            mainThreadHandler?.post(timerRunnable)
         }
     }
 
     override fun onPause() {
         super.onPause()
         player.pausePlayer()
+        timerRunnable.let { mainThreadHandler?.removeCallbacks(it) }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        timerRunnable.let { mainThreadHandler?.removeCallbacks(it) }
         player.release()
     }
 

@@ -196,6 +196,11 @@ class SearchActivity : AppCompatActivity() {
         tracksHistoryAdapter.notifyDataSetChanged()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        searchRunnable?.let { handler.removeCallbacks(it) }
+    }
+
     private fun searchDebounce(text: String) {
         searchRunnable?.let { handler.removeCallbacks(it) }
 
