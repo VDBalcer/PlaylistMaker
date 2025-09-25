@@ -233,11 +233,6 @@ class SearchActivity : AppCompatActivity() {
         searchRunnable?.let { handler.removeCallbacks(it) }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        searchRunnable?.let { handler.removeCallbacks(it) }
-    }
-
     private fun searchDebounce(text: String) {
         searchRunnable?.let { handler.removeCallbacks(it) }
         searchRunnable = Runnable {
