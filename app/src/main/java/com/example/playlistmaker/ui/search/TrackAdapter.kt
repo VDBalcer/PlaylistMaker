@@ -1,15 +1,15 @@
-package com.example.playlistmaker.search
+package com.example.playlistmaker.ui.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.domain.models.Track
 
 class TrackAdapter(
     val onTrackClick: (Track) -> Unit = {}
 ) : RecyclerView.Adapter<TrackViewHolder>() {
-    var tracks: List<Track> = emptyList<Track>()
+    var tracks: List<Track> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()

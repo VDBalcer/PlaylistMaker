@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
 import android.os.Handler
@@ -10,14 +10,16 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.mediaPlayer.Player
-import com.example.playlistmaker.model.Track
-import com.example.playlistmaker.search.dpToPx
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.PlayerInteractor
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.search.dpToPx
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackPlayerActivity : AppCompatActivity() {
-    lateinit var player: Player
+    lateinit var playerInteractor: PlayerInteractor
     private var mainThreadHandler: Handler? = null
     private val timerFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     private lateinit var timerRunnable: Runnable
@@ -66,30 +68,35 @@ class TrackPlayerActivity : AppCompatActivity() {
         findViewById<AppCompatTextView>(R.id.track_country_content).text = track?.country
 
         val playButton = findViewById<ImageButton>(R.id.main_player_button)
-        player = Player(track!!.previewUrl, playButton)
+        playerInteractor = Creator.getPlayerInteractor(track!!.previewUrl)
         val trackTimer = findViewById<AppCompatTextView>(R.id.track_timer)
-        timerRunnable = object: Runnable {
+        timerRunnable = object : Runnable {
             override fun run() {
-                trackTimer.text = timerFormat.format(player.getCurrentPosition())
+                trackTimer.text = timerFormat.format(playerInteractor.getCurrentPosition())
                 mainThreadHandler?.postDelayed(this, DELAY)
             }
         }
         playButton.setOnClickListener {
-            player.playbackControl()
+            playerInteractor.playbackControl()
+            if (playerInteractor.isTrackPlaying()) {
+                playButton.setImageResource(R.drawable.ic_stop)
+            } else {
+                playButton.setImageResource(R.drawable.ic_play)
+            }
             mainThreadHandler?.post(timerRunnable)
         }
     }
 
     override fun onPause() {
         super.onPause()
-        player.pausePlayer()
+        playerInteractor.pausePlayer()
         timerRunnable.let { mainThreadHandler?.removeCallbacks(it) }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         timerRunnable.let { mainThreadHandler?.removeCallbacks(it) }
-        player.release()
+        playerInteractor.release()
     }
 
     companion object {
