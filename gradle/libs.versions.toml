@@ -1,7 +1,7 @@
 [versions]
 agp = "8.6.1"
 kotlin = "1.9.0"
-coreKtx = "1.12.0"
+coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -11,6 +11,9 @@ activity = "1.8.1"
 constraintlayout = "2.2.0"
 glide = "4.14.2"
 retrofit = "2.9.0"
+viewmodel = "2.5.1"
+activity-ktx = "1.6.1"
+lifecycle-livedata-ktx = "2.5.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,6 +28,11 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "gl
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 retrofit = {group = "com.squareup.retrofit2" , name = "retrofit", version.ref = "retrofit"}
 retrofit-gson = {group = "com.squareup.retrofit2" , name = "converter-gson", version.ref = "retrofit"}
+viewmodel-ktx = {group="androidx.lifecycle", name="lifecycle-viewmodel-ktx" , version.ref="viewmodel"}
+activity-ktx = {group="androidx.activity", name="activity-ktx" , version.ref="activity-ktx"}
+lifecycle-livedata-ktx = {group="androidx.lifecycle", name="lifecycle-livedata-ktx" , version.ref="lifecycle-livedata-ktx"}
+
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
