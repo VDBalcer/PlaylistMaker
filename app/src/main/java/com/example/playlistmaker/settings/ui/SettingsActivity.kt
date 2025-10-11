@@ -9,27 +9,28 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySettingsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setNavigationOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             finish()
         }
 
-        val shareButton = findViewById<MaterialTextView>(R.id.share_app)
-        shareButton.setOnClickListener {
+        binding.shareApp.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.setType("text/plain")
             shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_uri))
             startActivity(shareIntent)
         }
 
-        val supportButton = findViewById<MaterialTextView>(R.id.write_support)
-        supportButton.setOnClickListener {
+        binding.writeSupport.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SENDTO)
             shareIntent.data = Uri.parse("mailto:")
             shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.author_email)))
@@ -38,15 +39,13 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(shareIntent)
         }
 
-        val termsButton = findViewById<MaterialTextView>(R.id.terms)
-        termsButton.setOnClickListener {
+        binding.terms.setOnClickListener {
             val termsIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terns_uri)))
             startActivity(termsIntent)
         }
 
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.theme_switcher)
-        themeSwitcher.isChecked = (applicationContext as App).themeInteractor.isDarkTheme()
-        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+        binding.themeSwitcher.isChecked = (applicationContext as App).themeInteractor.isDarkTheme()
+        binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
             (applicationContext as App).themeInteractor.updateTheme(checked)
             (applicationContext as App).switchTheme(checked)
         }
