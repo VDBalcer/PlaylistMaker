@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.api
+package com.example.playlistmaker.player.domain.api
 
 interface PlayerInteractor {
     fun startPlayer()

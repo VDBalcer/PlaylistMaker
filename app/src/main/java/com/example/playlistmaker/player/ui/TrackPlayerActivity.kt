@@ -3,38 +3,37 @@ package com.example.playlistmaker.player.ui
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.api.PlayerInteractor
-import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.databinding.TrackPlayerBinding
+import com.example.playlistmaker.player.domain.api.PlayerInteractor
+import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.dpToPx
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackPlayerActivity : AppCompatActivity() {
     lateinit var playerInteractor: PlayerInteractor
+    private lateinit var binding: TrackPlayerBinding
     private var mainThreadHandler: Handler? = null
     private val timerFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
     private lateinit var timerRunnable: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.track_player)
+        binding = TrackPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         mainThreadHandler = Handler(Looper.getMainLooper())
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.setNavigationOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
             finish()
         }
 
@@ -44,12 +43,12 @@ class TrackPlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.track_placeholder)
             .fitCenter()
             .transform(RoundedCorners(dpToPx(ARTWORK_RADIUS, this)))
-            .into(findViewById<AppCompatImageView>(R.id.track_artwork_image))
+            .into(binding.trackArtworkImage)
 
-        findViewById<AppCompatTextView>(R.id.track_title).text = track?.trackName
-        findViewById<AppCompatTextView>(R.id.artist_name).text = track?.artistName
-        findViewById<AppCompatTextView>(R.id.track_time_content).text = track?.trackTime
-        findViewById<AppCompatTextView>(R.id.track_album_content).text = track?.collectionName
+        binding.trackTitle.text = track?.trackName
+        binding.artistName.text = track?.artistName
+        binding.trackTimeContent.text = track?.trackTime
+        binding.trackAlbumContent.text = track?.collectionName
 
         val releaseDate = track?.releaseDate?.let {
             SimpleDateFormat(
@@ -62,26 +61,23 @@ class TrackPlayerActivity : AppCompatActivity() {
                 it
             )
         }
-        findViewById<AppCompatTextView>(R.id.track_year_content).text = formattedDate
+        binding.trackYearContent.text = formattedDate
+        binding.trackGenreContent.text = track?.primaryGenreName
+        binding.trackCountryContent.text = track?.country
 
-        findViewById<AppCompatTextView>(R.id.track_genre_content).text = track?.primaryGenreName
-        findViewById<AppCompatTextView>(R.id.track_country_content).text = track?.country
-
-        val playButton = findViewById<ImageButton>(R.id.main_player_button)
         playerInteractor = Creator.getPlayerInteractor(track!!.previewUrl)
-        val trackTimer = findViewById<AppCompatTextView>(R.id.track_timer)
         timerRunnable = object : Runnable {
             override fun run() {
-                trackTimer.text = timerFormat.format(playerInteractor.getCurrentPosition())
+                binding.trackTimer.text = timerFormat.format(playerInteractor.getCurrentPosition())
                 mainThreadHandler?.postDelayed(this, DELAY)
             }
         }
-        playButton.setOnClickListener {
+        binding.mainPlayerButton.setOnClickListener {
             playerInteractor.playbackControl()
             if (playerInteractor.isTrackPlaying()) {
-                playButton.setImageResource(R.drawable.ic_stop)
+                binding.mainPlayerButton.setImageResource(R.drawable.ic_stop)
             } else {
-                playButton.setImageResource(R.drawable.ic_play)
+                binding.mainPlayerButton.setImageResource(R.drawable.ic_play)
             }
             mainThreadHandler?.post(timerRunnable)
         }

@@ -1,6 +1,5 @@
 package com.example.playlistmaker.search.data.dto
 
-import com.example.playlistmaker.data.dto.Response
 import com.google.gson.annotations.SerializedName
 
 class TracksSearchResponse(

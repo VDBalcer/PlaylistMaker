@@ -19,35 +19,42 @@ class SettingsActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.toolbar.setNavigationOnClickListener {
-            finish()
-        }
+        binding.apply {
+            toolbar.setNavigationOnClickListener {
+                finish()
+            }
 
-        binding.shareApp.setOnClickListener {
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.setType("text/plain")
-            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_uri))
-            startActivity(shareIntent)
-        }
+            shareApp.setOnClickListener {
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.setType("text/plain")
+                shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_uri))
+                startActivity(shareIntent)
+            }
 
-        binding.writeSupport.setOnClickListener {
-            val shareIntent = Intent(Intent.ACTION_SENDTO)
-            shareIntent.data = Uri.parse("mailto:")
-            shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.author_email)))
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.write_support_subject))
-            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.write_support_text))
-            startActivity(shareIntent)
-        }
+            writeSupport.setOnClickListener {
+                val shareIntent = Intent(Intent.ACTION_SENDTO)
+                shareIntent.data = Uri.parse("mailto:")
+                shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.author_email)))
+                shareIntent.putExtra(
+                    Intent.EXTRA_SUBJECT,
+                    getString(R.string.write_support_subject)
+                )
+                shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.write_support_text))
+                startActivity(shareIntent)
+            }
 
-        binding.terms.setOnClickListener {
-            val termsIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terns_uri)))
-            startActivity(termsIntent)
-        }
+            terms.setOnClickListener {
+                val termsIntent =
+                    Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terns_uri)))
+                startActivity(termsIntent)
+            }
 
-        binding.themeSwitcher.isChecked = (applicationContext as App).themeInteractor.isDarkTheme()
-        binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            (applicationContext as App).themeInteractor.updateTheme(checked)
-            (applicationContext as App).switchTheme(checked)
+
+            themeSwitcher.isChecked = (applicationContext as App).themeInteractor.isDarkTheme()
+            themeSwitcher.setOnCheckedChangeListener { _, checked ->
+                (applicationContext as App).themeInteractor.updateTheme(checked)
+                (applicationContext as App).switchTheme(checked)
+            }
         }
     }
 }
