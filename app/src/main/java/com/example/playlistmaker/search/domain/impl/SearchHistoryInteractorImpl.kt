@@ -29,7 +29,7 @@ class SearchHistoryInteractorImpl(private val repository: SearchHistoryRepositor
 
     override fun saveTracksToPrefs(tracks: List<Track>) {
         executor.execute {
-            repository.saveTracksToPrefs(tracks)
+            repository.saveTracks(tracks)
         }
     }
 
