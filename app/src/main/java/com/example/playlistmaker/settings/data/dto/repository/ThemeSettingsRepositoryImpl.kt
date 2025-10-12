@@ -1,19 +1,16 @@
 package com.example.playlistmaker.settings.data.dto.repository
 
-import android.content.SharedPreferences
+import com.example.playlistmaker.settings.data.storage.ThemeStorageClient
 import com.example.playlistmaker.settings.domain.api.ThemeSettingsRepository
 
-class ThemeSettingsRepositoryImpl(private val prefs: SharedPreferences) : ThemeSettingsRepository {
+class ThemeSettingsRepositoryImpl(
+    private val storage: ThemeStorageClient
+) : ThemeSettingsRepository {
     override fun isDarkTheme(): Boolean =
-        prefs.getBoolean(DARK_THEME_KEY, false)
+        storage.getData()
 
     override fun setDarkTheme(enabled: Boolean) {
-        prefs.edit()
-            .putBoolean(DARK_THEME_KEY, enabled)
-            .apply()
+        storage.storeData(enabled)
     }
 
-    companion object {
-        const val DARK_THEME_KEY = "dark_theme"
-    }
 }

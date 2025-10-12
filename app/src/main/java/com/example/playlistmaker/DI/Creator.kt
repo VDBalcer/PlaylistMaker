@@ -35,23 +35,27 @@ object Creator {
         return SearchHistoryInteractorImpl(getSearchHistoryRepository(context))
     }
 
+    private const val historyPrefsStorageKey = "searched_tracks"
     private fun getSearchHistoryRepository(context: Context): SearchHistoryRepository {
         return SearchHistoryRepositoryImpl(
             PrefsStorageClient(
                 context,
+                historyPrefsStorageKey,
                 object : TypeToken<List<Track>>() {}.type
             )
         )
     }
 
+    private const val themePrefsStorageKey = "app_dark_theme_preferences"
     fun getThemeInteractor(context: Context): ThemeInteractor {
         return ThemeInteractorImpl(getThemeRepository(context))
     }
     private fun getThemeRepository(context: Context): ThemeSettingsRepository {
-        return ThemeSettingsRepositoryImpl(ThemeStorageClient(context))
+        return ThemeSettingsRepositoryImpl(ThemeStorageClient(context, themePrefsStorageKey))
     }
 
     fun getPlayerInteractor(trackUrl: String): PlayerInteractor {
         return PlayerInteractorImpl(trackUrl)
     }
+
 }

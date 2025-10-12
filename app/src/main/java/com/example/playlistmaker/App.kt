@@ -12,8 +12,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val sharedPrefs = getSharedPreferences(APP_THEME_PREFERENCES, MODE_PRIVATE)
-        themeInteractor = Creator.getThemeInteractor(sharedPrefs)
+        themeInteractor = Creator.getThemeInteractor(this)
 
         // применяем тему при старте
         switchTheme(themeInteractor.isDarkTheme())
@@ -26,7 +25,4 @@ class App : Application() {
         )
     }
 
-    companion object {
-        const val APP_THEME_PREFERENCES = "app_theme_preferences"
-    }
 }
