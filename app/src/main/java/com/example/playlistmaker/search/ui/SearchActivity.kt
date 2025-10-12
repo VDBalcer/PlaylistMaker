@@ -21,12 +21,7 @@ class SearchActivity : AppCompatActivity() {
     private val viewModel: SearchViewModel by viewModels {
         SearchViewModel.getFactory(
             Creator.getTracksInteractor(),
-            Creator.getHistoryInteractor(
-                this.getSharedPreferences(
-                    HISTORY_PREFERENCES,
-                    Context.MODE_PRIVATE
-                )
-            )
+            Creator.getHistoryInteractor(this)
         )
     }
 
@@ -186,7 +181,4 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        const val HISTORY_PREFERENCES = "search_history_preferences"
-    }
 }
