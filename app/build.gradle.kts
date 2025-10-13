@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.example.playlistmaker"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.playlistmaker"
@@ -37,6 +37,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -53,4 +56,7 @@ dependencies {
     annotationProcessor(libs.glide.compiler)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
+    implementation(libs.viewmodel.ktx)
+    implementation(libs.activity.ktx)
+    implementation(libs.lifecycle.livedata.ktx)
 }

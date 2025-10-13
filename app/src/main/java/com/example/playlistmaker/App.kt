@@ -2,7 +2,8 @@ package com.example.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.domain.api.ThemeInteractor
+import com.example.playlistmaker.DI.Creator
+import com.example.playlistmaker.settings.domain.api.ThemeInteractor
 
 class App : Application() {
     lateinit var themeInteractor: ThemeInteractor
@@ -11,8 +12,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val sharedPrefs = getSharedPreferences(APP_THEME_PREFERENCES, MODE_PRIVATE)
-        themeInteractor = Creator.getThemeInteractor(sharedPrefs)
+        themeInteractor = Creator.getThemeInteractor(this)
 
         // применяем тему при старте
         switchTheme(themeInteractor.isDarkTheme())
@@ -25,7 +25,4 @@ class App : Application() {
         )
     }
 
-    companion object {
-        const val APP_THEME_PREFERENCES = "app_theme_preferences"
-    }
 }
