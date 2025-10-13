@@ -1,7 +1,6 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -63,10 +62,11 @@ class TrackPlayerActivity : AppCompatActivity() {
             binding.trackTimer.text = it
         }
         viewModel.observePlayerState().observe(this) {
-            if (it) {
-                binding.mainPlayerButton.setImageResource(R.drawable.ic_stop)
-            } else {
-                binding.mainPlayerButton.setImageResource(R.drawable.ic_play)
+            when (it) {
+                TrackPlayerViewModel.STATE_PLAYING ->
+                    binding.mainPlayerButton.setImageResource(R.drawable.ic_stop)
+                else ->
+                    binding.mainPlayerButton.setImageResource(R.drawable.ic_play)
             }
         }
         binding.mainPlayerButton.setOnClickListener {

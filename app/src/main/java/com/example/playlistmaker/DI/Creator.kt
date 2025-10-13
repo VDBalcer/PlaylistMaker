@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.playlistmaker.search.data.repository.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.repository.SearchTracksRepositoryImpl
 import com.example.playlistmaker.search.data.network.ItunesClient
-import com.example.playlistmaker.player.domain.api.PlayerInteractor
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.api.SearchTracksInteractor
@@ -12,7 +11,6 @@ import com.example.playlistmaker.search.domain.api.SearchTracksRepository
 import com.example.playlistmaker.settings.domain.api.ThemeInteractor
 import com.example.playlistmaker.settings.domain.api.ThemeSettingsRepository
 import com.example.playlistmaker.settings.domain.impl.ThemeInteractorImpl
-import com.example.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.domain.impl.SearchTracksInteractorImpl
 import com.example.playlistmaker.search.domain.model.Track
@@ -78,10 +76,6 @@ object Creator {
     }
     private fun getResourceProvider(context: Context): ResourceProvider {
         return ResourceProviderImpl(context)
-    }
-
-    fun getPlayerInteractor(trackUrl: String): PlayerInteractor {
-        return PlayerInteractorImpl(trackUrl)
     }
 
 }
