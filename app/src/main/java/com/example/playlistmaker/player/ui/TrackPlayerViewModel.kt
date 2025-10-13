@@ -17,26 +17,12 @@ import java.util.Locale
 class TrackPlayerViewModel(
     private val playerInteractor: PlayerInteractor
 ) : ViewModel() {
-    companion object {
-        const val DELAY = 250L
-        const val PLAYING = true
-        const val STOPPED = false
 
-        fun getFactory(
-            track: Track
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TrackPlayerViewModel(
-                    Creator.getPlayerInteractor(track.previewUrl)
-                )
-            }
-        }
-    }
-
-    private val isPlayingStateLiveData = MutableLiveData(STOPPED)
+    private val isPlayingStateLiveData = MutableLiveData(false)
     fun observePlayerState(): LiveData<Boolean> = isPlayingStateLiveData
 
-    private val progressTimeLiveData = MutableLiveData("00:00")
+    private val timerFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
+    private val progressTimeLiveData = MutableLiveData(timerFormat.format(0))
     fun observeProgressTime(): LiveData<String> = progressTimeLiveData
 
     private val handler = Handler(Looper.getMainLooper())
@@ -49,9 +35,7 @@ class TrackPlayerViewModel(
 
     private fun startTimerUpdate() {
         progressTimeLiveData.postValue(
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(
-                playerInteractor.getCurrentPosition()
-            )
+            timerFormat.format(playerInteractor.getCurrentPosition())
         )
         handler.postDelayed(timerRunnable, DELAY)
     }
@@ -59,23 +43,37 @@ class TrackPlayerViewModel(
     fun playButtonClick() {
         playerInteractor.playbackControl()
         if (playerInteractor.isTrackPlaying()) {
-            isPlayingStateLiveData.postValue(PLAYING)
+            isPlayingStateLiveData.postValue(true)
             handler.post(timerRunnable)
         } else {
-            isPlayingStateLiveData.postValue(STOPPED)
+            isPlayingStateLiveData.postValue(false)
             timerRunnable.let { handler.removeCallbacks(it) }
         }
 
     }
 
-    fun pausePlayer(){
+    fun pausePlayer() {
         playerInteractor.pausePlayer()
-        isPlayingStateLiveData.postValue(STOPPED)
+        isPlayingStateLiveData.postValue(false)
         timerRunnable.let { handler.removeCallbacks(it) }
     }
 
-    fun releasePlayer(){
+    fun releasePlayer() {
         timerRunnable.let { handler.removeCallbacks(it) }
         playerInteractor.release()
+    }
+
+    companion object {
+        const val DELAY = 250L
+
+        fun getFactory(
+            track: Track
+        ): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                TrackPlayerViewModel(
+                    Creator.getPlayerInteractor(track.previewUrl)
+                )
+            }
+        }
     }
 }

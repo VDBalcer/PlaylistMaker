@@ -18,22 +18,6 @@ class SearchViewModel(
     private val searchTracksInteractor: SearchTracksInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
-    companion object {
-        const val SEARCH_DEBOUNCE_DELAY = 2000L
-        const val CLICK_DEBOUNCE_DELAY = 1000L
-
-        fun getFactory(
-            searchTracksInteractor: SearchTracksInteractor,
-            searchHistoryInteractor: SearchHistoryInteractor
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SearchViewModel(
-                    searchTracksInteractor = searchTracksInteractor,
-                    searchHistoryInteractor = searchHistoryInteractor
-                )
-            }
-        }
-    }
 
     val stateLiveData = MutableLiveData<SearchState>()
     fun observeState(): LiveData<SearchState> = stateLiveData
@@ -100,5 +84,22 @@ class SearchViewModel(
     override fun onCleared() {
         super.onCleared()
         handler.removeCallbacksAndMessages(null)
+    }
+
+    companion object {
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
+        const val CLICK_DEBOUNCE_DELAY = 1000L
+
+        fun getFactory(
+            searchTracksInteractor: SearchTracksInteractor,
+            searchHistoryInteractor: SearchHistoryInteractor
+        ): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                SearchViewModel(
+                    searchTracksInteractor = searchTracksInteractor,
+                    searchHistoryInteractor = searchHistoryInteractor
+                )
+            }
+        }
     }
 }

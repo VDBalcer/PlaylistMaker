@@ -15,19 +15,6 @@ class SettingViewModel(
     private val sharingInteractor: SharingInteractor,
     private val themeInteractor: ThemeInteractor
 ) : ViewModel() {
-    companion object {
-        fun getFactory(
-            sharingInteractor: SharingInteractor,
-            themeInteractor: ThemeInteractor,
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SettingViewModel(
-                    sharingInteractor = sharingInteractor,
-                    themeInteractor = themeInteractor
-                )
-            }
-        }
-    }
     private val themeLiveData = MutableLiveData<ThemeSettings>()
     fun observeTheme(): LiveData<ThemeSettings> = themeLiveData
 
@@ -47,9 +34,22 @@ class SettingViewModel(
         sharingInteractor.openSupport()
     }
 
-
     fun onThemeSwitched(enabled: Boolean) {
         themeInteractor.updateTheme(enabled)
         themeLiveData.postValue(ThemeSettings(isDarkTheme = enabled))
+    }
+
+    companion object {
+        fun getFactory(
+            sharingInteractor: SharingInteractor,
+            themeInteractor: ThemeInteractor,
+        ): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                SettingViewModel(
+                    sharingInteractor = sharingInteractor,
+                    themeInteractor = themeInteractor
+                )
+            }
+        }
     }
 }

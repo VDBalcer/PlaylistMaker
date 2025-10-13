@@ -23,7 +23,7 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
     override fun openEmail(emailData: EmailData) {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:")
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(emailData.emailList))
+            putExtra(Intent.EXTRA_EMAIL, emailData.emailList.toTypedArray())
             putExtra(Intent.EXTRA_SUBJECT, emailData.subject)
             putExtra(Intent.EXTRA_TEXT, emailData.text)
         }

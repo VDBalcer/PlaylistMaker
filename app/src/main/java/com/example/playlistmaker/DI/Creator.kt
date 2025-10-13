@@ -20,7 +20,9 @@ import com.example.playlistmaker.search.data.storage.PrefsStorageClient
 import com.example.playlistmaker.settings.data.repository.ThemeSettingsRepositoryImpl
 import com.example.playlistmaker.settings.domain.model.ThemeSettings
 import com.example.playlistmaker.sharing.data.impl.ExternalNavigatorImpl
+import com.example.playlistmaker.sharing.data.impl.ResourceProviderImpl
 import com.example.playlistmaker.sharing.domain.ExternalNavigator
+import com.example.playlistmaker.sharing.domain.ResourceProvider
 import com.example.playlistmaker.sharing.domain.SharingInteractor
 import com.example.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 import com.google.gson.reflect.TypeToken
@@ -66,10 +68,16 @@ object Creator {
     }
 
     fun getSharingInteractor(context: Context): SharingInteractor {
-        return SharingInteractorImpl(context, getSharingRepository(context))
+        return SharingInteractorImpl(
+            getResourceProvider(context),
+            getExternalNavigator(context)
+        )
     }
-    private fun getSharingRepository(context: Context): ExternalNavigator {
+    private fun getExternalNavigator(context: Context): ExternalNavigator {
         return ExternalNavigatorImpl(context)
+    }
+    private fun getResourceProvider(context: Context): ResourceProvider {
+        return ResourceProviderImpl(context)
     }
 
     fun getPlayerInteractor(trackUrl: String): PlayerInteractor {
