@@ -11,15 +11,15 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
 
-    single<SearchTracksRepository> {
+    factory<SearchTracksRepository> {
         SearchTracksRepositoryImpl(get())
     }
 
-    single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(get(named("searched_tracks")))
+    factory<SearchHistoryRepository> {
+        SearchHistoryRepositoryImpl(get(named(SEARCHED_TRACKS_DATA_KEY)))
     }
 
-    single<ThemeSettingsRepository> {
-        ThemeSettingsRepositoryImpl(get(named("theme_settings")))
+    factory<ThemeSettingsRepository> {
+        ThemeSettingsRepositoryImpl(get(named(THEME_SETTINGS_DATA_KEY)))
     }
 }

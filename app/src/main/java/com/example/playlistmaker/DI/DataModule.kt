@@ -28,7 +28,7 @@ val dataModule = module {
             .build()
             .create(ItunesApi::class.java)
     }
-    single<Gson> { Gson() }
+    factory<Gson> { Gson() }
 
     factory<MediaPlayer> { MediaPlayer() }
 
@@ -36,21 +36,19 @@ val dataModule = module {
         ItunesClient(get())
     }
 
-    single<StorageClient<List<Track>>>(qualifier = named("searched_tracks")) {
-        val dataKey = "searched_tracks"
+    single<StorageClient<List<Track>>>(qualifier = named(SEARCHED_TRACKS_DATA_KEY)) {
         PrefsStorageClient(
             androidContext(),
-            dataKey,
+            SEARCHED_TRACKS_DATA_KEY,
             object : TypeToken<List<Track>>() {}.type,
             get()
         )
     }
 
-    single<StorageClient<ThemeSettings>>(qualifier = named("theme_settings")) {
-        val dataKey = "app_dark_theme_preferences"
+    single<StorageClient<ThemeSettings>>(qualifier = named(THEME_SETTINGS_DATA_KEY)) {
         PrefsStorageClient(
             androidContext(),
-            dataKey,
+            THEME_SETTINGS_DATA_KEY,
             object : TypeToken<ThemeSettings>() {}.type,
             get()
         )
@@ -59,8 +57,11 @@ val dataModule = module {
     single<ResourceProvider> {
         ResourceProviderImpl(androidContext())
     }
-    single<ExternalNavigator> {
+    factory<ExternalNavigator> {
         ExternalNavigatorImpl(androidContext())
     }
 
 }
+
+const val SEARCHED_TRACKS_DATA_KEY = "searched_tracks"
+const val THEME_SETTINGS_DATA_KEY = "theme_settings"
