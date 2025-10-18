@@ -1,0 +1,66 @@
+package com.example.playlistmaker.DI
+
+import android.media.MediaPlayer
+import com.example.playlistmaker.search.data.network.ItunesApi
+import com.example.playlistmaker.search.data.network.ItunesClient
+import com.example.playlistmaker.search.data.network.NetworkClient
+import com.example.playlistmaker.search.data.storage.PrefsStorageClient
+import com.example.playlistmaker.search.domain.model.Track
+import com.example.playlistmaker.settings.data.storage.StorageClient
+import com.example.playlistmaker.settings.domain.model.ThemeSettings
+import com.example.playlistmaker.sharing.data.impl.ExternalNavigatorImpl
+import com.example.playlistmaker.sharing.data.impl.ResourceProviderImpl
+import com.example.playlistmaker.sharing.domain.ExternalNavigator
+import com.example.playlistmaker.sharing.domain.ResourceProvider
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
+val dataModule = module {
+    single<ItunesApi> {
+        Retrofit.Builder()
+            .baseUrl("https://itunes.apple.com")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ItunesApi::class.java)
+    }
+    single<Gson> { Gson() }
+
+    factory<MediaPlayer> { MediaPlayer() }
+
+    single<NetworkClient> {
+        ItunesClient(get())
+    }
+
+    single<StorageClient<List<Track>>>(qualifier = named("searched_tracks")) {
+        val dataKey = "searched_tracks"
+        PrefsStorageClient(
+            androidContext(),
+            dataKey,
+            object : TypeToken<List<Track>>() {}.type,
+            get()
+        )
+    }
+
+    single<StorageClient<ThemeSettings>>(qualifier = named("theme_settings")) {
+        val dataKey = "app_dark_theme_preferences"
+        PrefsStorageClient(
+            androidContext(),
+            dataKey,
+            object : TypeToken<ThemeSettings>() {}.type,
+            get()
+        )
+    }
+
+    single<ResourceProvider> {
+        ResourceProviderImpl(androidContext())
+    }
+    single<ExternalNavigator> {
+        ExternalNavigatorImpl(androidContext())
+    }
+
+}

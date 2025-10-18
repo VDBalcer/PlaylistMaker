@@ -2,10 +2,10 @@ package com.example.playlistmaker.search.data.repository
 
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.model.Track
-import com.example.playlistmaker.search.data.storage.PrefsStorageClient
+import com.example.playlistmaker.settings.data.storage.StorageClient
 
 class SearchHistoryRepositoryImpl(
-    private val storage: PrefsStorageClient<List<Track>>
+    private val storage: StorageClient<List<Track>>
 ) : SearchHistoryRepository {
 
     override fun addTrackToHistory(newTrack: Track) {

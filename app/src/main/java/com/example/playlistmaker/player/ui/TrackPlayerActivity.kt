@@ -2,20 +2,23 @@ package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackPlayerBinding
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.dpToPx
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackPlayerActivity : AppCompatActivity() {
     private lateinit var binding: TrackPlayerBinding
     private lateinit var track: Track
-    private lateinit var viewModel: TrackPlayerViewModel
+    private val viewModel: TrackPlayerViewModel by viewModel {
+        parametersOf(track.previewUrl)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,11 +26,6 @@ class TrackPlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         track = intent.getParcelableExtra(TRACK)!!
-        viewModel = ViewModelProvider(
-            this,
-            TrackPlayerViewModel.getFactory(track)
-        )[TrackPlayerViewModel::class.java]
-
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -65,6 +63,7 @@ class TrackPlayerActivity : AppCompatActivity() {
             when (it) {
                 TrackPlayerViewModel.STATE_PLAYING ->
                     binding.mainPlayerButton.setImageResource(R.drawable.ic_stop)
+
                 else ->
                     binding.mainPlayerButton.setImageResource(R.drawable.ic_play)
             }
