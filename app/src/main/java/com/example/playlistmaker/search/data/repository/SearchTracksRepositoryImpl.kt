@@ -5,7 +5,6 @@ import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import com.example.playlistmaker.search.data.dto.TracksSearchResponse
 import com.example.playlistmaker.search.domain.api.SearchTracksRepository
 import com.example.playlistmaker.search.domain.model.SearchResult
-import com.example.playlistmaker.search.domain.model.Track
 
 class SearchTracksRepositoryImpl(private val networkClient: NetworkClient) :
     SearchTracksRepository {

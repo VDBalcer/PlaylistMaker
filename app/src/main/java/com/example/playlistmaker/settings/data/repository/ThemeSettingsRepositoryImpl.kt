@@ -1,11 +1,11 @@
 package com.example.playlistmaker.settings.data.repository
 
-import com.example.playlistmaker.search.data.storage.PrefsStorageClient
+import com.example.playlistmaker.settings.data.storage.StorageClient
 import com.example.playlistmaker.settings.domain.api.ThemeSettingsRepository
 import com.example.playlistmaker.settings.domain.model.ThemeSettings
 
 class ThemeSettingsRepositoryImpl(
-    private val storage: PrefsStorageClient<ThemeSettings>
+    private val storage: StorageClient<ThemeSettings>
 ) : ThemeSettingsRepository {
     override fun isDarkTheme(): Boolean =
         storage.getData()?.isDarkTheme ?: false

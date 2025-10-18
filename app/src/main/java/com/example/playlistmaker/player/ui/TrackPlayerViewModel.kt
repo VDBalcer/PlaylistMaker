@@ -6,15 +6,12 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.search.domain.model.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackPlayerViewModel(
-    trackUrl: String
+    trackUrl: String,
+    private val mediaPlayer: MediaPlayer
 ) : ViewModel() {
 
     private val playerStateLiveData = MutableLiveData(STATE_DEFAULT)
@@ -23,8 +20,6 @@ class TrackPlayerViewModel(
     private val timerFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
     private val progressTimeLiveData = MutableLiveData(timerFormat.format(0))
     fun observeProgressTime(): LiveData<String> = progressTimeLiveData
-
-    private val mediaPlayer = MediaPlayer()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -102,15 +97,5 @@ class TrackPlayerViewModel(
         const val STATE_PREPARED = 1
         const val STATE_PLAYING = 2
         const val STATE_PAUSED = 3
-
-        fun getFactory(
-            track: Track
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                TrackPlayerViewModel(
-                    track.previewUrl
-                )
-            }
-        }
     }
 }
