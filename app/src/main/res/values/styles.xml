@@ -59,6 +59,9 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/placeholder_text_size</item>
     </style>
+    <style name="PlaceholderText.Title">
+        <item name="android:textStyle">bold</item>
+    </style>
 
     <style name="PlaceholderButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textAllCaps">false</item>
@@ -85,5 +88,10 @@
         <item name="android:textSize">13sp</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="LibraryTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 </resources>

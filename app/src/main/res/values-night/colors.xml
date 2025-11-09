@@ -24,4 +24,6 @@
     <color name="placeholder_image_primary_color">@color/white</color>
 
     <color name="track_player_side_buttons_color">#40FFFFFF</color>
+
+    <color name="library_tablayout_text_color">@color/white</color>
 </resources>
