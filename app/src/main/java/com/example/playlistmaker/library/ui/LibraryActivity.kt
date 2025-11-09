@@ -26,8 +26,8 @@ class LibraryActivity : AppCompatActivity(R.layout.activity_library) {
 
         tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when(position) {
-                0 -> tab.text = "Избранные треки"
-                1 -> tab.text = "Плейлисты"
+                0 -> tab.text = getString(R.string.favorite_tab_title)
+                1 -> tab.text = getString(R.string.playlists_tab_title)
             }
         }
         tabMediator.attach()
