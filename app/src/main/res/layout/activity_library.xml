@@ -2,16 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/library"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".library.ui.LibraryActivity"
-    android:background="?attr/colorSecondary">
+    tools:context=".library.ui.LibraryActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         style="@style/CommonToolbar"
         app:title="@string/library" />
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:tabMinWidth="150dp"
+
+        app:tabBackground="?attr/colorSecondary"
+        app:tabIndicatorColor="@color/library_tablayout_text_color"
+        app:tabTextAppearance="@style/LibraryTabTextAppearance"
+        app:tabTextColor="@color/library_tablayout_text_color" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
