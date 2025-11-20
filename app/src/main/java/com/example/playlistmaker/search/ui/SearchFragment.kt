@@ -174,20 +174,10 @@ class SearchFragment : Fragment() {
 
     private fun openTrackPlayer(track: Track) {
         if (viewModel.onTrackClicked(track)) {
-            //TODO: Проверить корректность перехода
             findNavController().navigate(
                 R.id.action_searchFragment_to_trackPlayerFragment,
                 TrackPlayerFragment.createArgs(track)
             )
-
-//            parentFragment?.parentFragmentManager?.commit {
-//                replace(
-//                    R.id.fragment_container,
-//                    TrackPlayerFragment.newInstance(track),
-//                    TrackPlayerFragment.TAG
-//                )
-//                addToBackStack(TrackPlayerFragment.TAG)
-//            }
         }
     }
 }
