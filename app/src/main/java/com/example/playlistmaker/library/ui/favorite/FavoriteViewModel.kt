@@ -1,4 +1,4 @@
-package com.example.playlistmaker.library.ui
+package com.example.playlistmaker.library.ui.favorite
 
 import androidx.lifecycle.ViewModel
 

@@ -1,40 +1,45 @@
 package com.example.playlistmaker.search.ui
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.player.ui.TrackPlayerActivity
-import com.example.playlistmaker.search.ui.model.SearchState
+import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.player.ui.TrackPlayerFragment
 import com.example.playlistmaker.search.domain.model.Track
+import com.example.playlistmaker.search.ui.model.SearchState
+import com.example.playlistmaker.settings.ui.SettingsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySearchBinding
+class SearchFragment : Fragment() {
+    companion object {
+        fun newInstance() = SettingsFragment()
+    }
+
+    private lateinit var binding: FragmentSearchBinding
     private val viewModel by viewModel<SearchViewModel>()
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var tracksHistoryAdapter: TrackAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        viewModel.observeState().observe(this) { state ->
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel.observeState().observe(viewLifecycleOwner) { state ->
             render(state)
-        }
-
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.toolbar.setNavigationOnClickListener {
-            finish()
         }
 
         trackAdapter = TrackAdapter(::openTrackPlayer)
@@ -63,8 +68,8 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchInputLayout.setEndIconOnClickListener {
             binding.searchInputEditText.text?.clear()
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(binding.searchInputEditText.windowToken, 0)
+            val imm = requireContext().getSystemService(InputMethodManager::class.java)
+            imm.hideSoftInputFromWindow(requireView().windowToken, 0)
 
             binding.trackRecyclerView.visibility = View.GONE
             viewModel.showHistory()
@@ -169,10 +174,20 @@ class SearchActivity : AppCompatActivity() {
 
     private fun openTrackPlayer(track: Track) {
         if (viewModel.onTrackClicked(track)) {
-            startActivity(Intent(this, TrackPlayerActivity::class.java).apply {
-                putExtra(TrackPlayerActivity.TRACK, track)
-            })
+            //TODO: Проверить корректность перехода
+            findNavController().navigate(
+                R.id.action_searchFragment_to_trackPlayerFragment,
+                TrackPlayerFragment.createArgs(track)
+            )
+
+//            parentFragment?.parentFragmentManager?.commit {
+//                replace(
+//                    R.id.fragment_container,
+//                    TrackPlayerFragment.newInstance(track),
+//                    TrackPlayerFragment.TAG
+//                )
+//                addToBackStack(TrackPlayerFragment.TAG)
+//            }
         }
     }
-
 }
