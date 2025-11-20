@@ -39,8 +39,6 @@ class TrackPlayerFragment : Fragment() {
     private lateinit var track: Track
     private val viewModel: TrackPlayerViewModel by viewModel {
         parametersOf(track.previewUrl)
-        //TODO Оставить что-то одно
-//        parametersOf(requireArguments().getParcelable<Track>(ARGS_TRACK)!!.previewUrl)
     }
 
     override fun onCreateView(
