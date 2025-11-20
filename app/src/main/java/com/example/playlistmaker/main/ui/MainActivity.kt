@@ -1,36 +1,61 @@
 package com.example.playlistmaker.main.ui
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.library.ui.LibraryActivity
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMainBinding
-import com.example.playlistmaker.search.ui.SearchActivity
-import com.example.playlistmaker.settings.ui.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.apply {
-            searchButton.setOnClickListener {
-                val intent = Intent(this@MainActivity, SearchActivity::class.java)
-                startActivity(intent)
-            }
+        setSupportActionBar(binding.toolbar)
 
-            libraryButton.setOnClickListener {
-                val intent = Intent(this@MainActivity, LibraryActivity::class.java)
-                startActivity(intent)
-            }
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container) as? NavHostFragment
+                ?: error("NavHostFragment not found")
 
-            settingsButton.setOnClickListener {
-                val intent = Intent(this@MainActivity, SettingsActivity::class.java)
-                startActivity(intent)
+        navController = navHostFragment.navController
+
+        binding.bottomNavigationView.setupWithNavController(navController)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.searchFragment,
+                R.id.libraryFragment,
+                R.id.settingsFragment
+            )
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.searchFragment,
+                R.id.libraryFragment,
+                R.id.settingsFragment -> {
+                    binding.bottomNavigationView.visibility = View.VISIBLE
+                }
+
+                else -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                }
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }
