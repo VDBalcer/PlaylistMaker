@@ -9,20 +9,26 @@ import com.example.playlistmaker.databinding.FragmentLibraryPlaylistsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
+    private val playlistsViewModel: PlaylistsViewModel by viewModel()
 
-    companion object {
-        fun newInstance() = PlaylistsFragment()
-    }
-
-    private val playlistsViewModel : PlaylistsViewModel by viewModel()
-
-    private lateinit var binding: FragmentLibraryPlaylistsBinding
+    private var _binding: FragmentLibraryPlaylistsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLibraryPlaylistsBinding.inflate(inflater, container, false)
-        return binding.root
+        _binding = FragmentLibraryPlaylistsBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    companion object {
+        fun newInstance() = PlaylistsFragment()
     }
 }

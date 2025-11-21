@@ -14,15 +14,13 @@ import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.TrackPlayerFragment
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.model.SearchState
-import com.example.playlistmaker.settings.ui.SettingsFragment
+import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
-    companion object {
-        fun newInstance() = SettingsFragment()
-    }
+        private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
-    private lateinit var binding: FragmentSearchBinding
     private val viewModel by viewModel<SearchViewModel>()
 
     private lateinit var trackAdapter: TrackAdapter
@@ -33,8 +31,9 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
-        return binding.root
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -83,6 +82,11 @@ class SearchFragment : Fragment() {
             viewModel.clearHistory()
             binding.clickedTracksHistory.visibility = View.GONE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun render(state: SearchState) {
@@ -179,5 +183,9 @@ class SearchFragment : Fragment() {
                 TrackPlayerFragment.createArgs(track)
             )
         }
+    }
+
+    companion object {
+        fun newInstance() = SearchFragment()
     }
 }

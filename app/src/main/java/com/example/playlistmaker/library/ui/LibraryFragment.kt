@@ -7,15 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentLibraryBinding
-import com.example.playlistmaker.settings.ui.SettingsFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
 class LibraryFragment : Fragment() {
-    companion object {
-        fun newInstance() = SettingsFragment()
-    }
 
-    private lateinit var binding: FragmentLibraryBinding
+    private var _binding: FragmentLibraryBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var tabMediator: TabLayoutMediator
 
@@ -23,8 +20,9 @@ class LibraryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLibraryBinding.inflate(inflater, container, false)
-        return binding.root
+        _binding = FragmentLibraryBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,6 +42,10 @@ class LibraryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         tabMediator.detach()
+        _binding = null
     }
 
+    companion object {
+        fun newInstance() = LibraryFragment()
+    }
 }

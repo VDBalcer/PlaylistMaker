@@ -18,24 +18,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackPlayerFragment : Fragment() {
-    companion object {
-        private const val ARTWORK_RADIUS = 8f
-        private const val ARGS_TRACK = "track"
+    private var _binding: TrackPlayerBinding? = null
+    private val binding get() = _binding!!
 
-        const val TAG = "TrackPlayerFragment"
-
-        fun newInstance(track: Track): Fragment {
-            return TrackPlayerFragment().apply {
-                arguments = createArgs(track)
-            }
-        }
-
-        fun createArgs(track: Track): Bundle =
-            bundleOf(ARGS_TRACK to track)
-    }
-
-
-    private lateinit var binding: TrackPlayerBinding
     private lateinit var track: Track
     private val viewModel: TrackPlayerViewModel by viewModel {
         parametersOf(track.previewUrl)
@@ -46,8 +31,9 @@ class TrackPlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = TrackPlayerBinding.inflate(inflater, container, false)
-        return binding.root
+        _binding = TrackPlayerBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,5 +89,22 @@ class TrackPlayerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         viewModel.releasePlayer()
+        _binding = null
+    }
+
+    companion object {
+        private const val ARTWORK_RADIUS = 8f
+        private const val ARGS_TRACK = "track"
+
+        const val TAG = "TrackPlayerFragment"
+
+        fun newInstance(track: Track): Fragment {
+            return TrackPlayerFragment().apply {
+                arguments = createArgs(track)
+            }
+        }
+
+        fun createArgs(track: Track): Bundle =
+            bundleOf(ARGS_TRACK to track)
     }
 }
