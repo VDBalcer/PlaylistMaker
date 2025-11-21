@@ -7,12 +7,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".search.ui.SearchActivity">
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        style="@style/CommonToolbar"
-        app:title="@string/search" />
+    tools:context=".search.ui.SearchFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/search_input_layout"
@@ -30,7 +25,7 @@
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
         app:endIconDrawable="@drawable/ic_cross"
-        app:endIconMode="clear_text"
+        app:endIconMode="custom"
         app:hintEnabled="false"
         app:startIconDrawable="@drawable/ic_search">
 

@@ -61,4 +61,7 @@ dependencies {
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.koin)
     implementation(libs.viewpager2)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
+    implementation(libs.fragment.ktx)
 }

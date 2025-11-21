@@ -1,38 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary"
-    android:orientation="vertical">
+    android:background="@color/main_background">
+
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/CommonToolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:layout_marginBottom="16dp"
-        app:title="@string/app_name"
-        app:titleTextAppearance="@style/MainToolbarTitleText"
-        app:titleTextColor="?attr/colorOnPrimary" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/search_button"
-        style="@style/MainButton"
-        android:text="@string/search"
-        app:icon="@drawable/ic_search" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_view"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:navGraph="@navigation/main_navigation_graph" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/library_button"
-        style="@style/MainButton"
-        android:text="@string/library"
-        app:icon="@drawable/ic_library" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:itemIconTint="@color/bottom_nav_item_selector"
+        app:itemTextColor="@color/bottom_nav_item_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/main_background"
+        app:itemRippleColor="@color/transparent"
+        app:menu="@menu/bottom_nav_menu" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/settings_button"
-        style="@style/MainButton"
-        android:text="@string/settings"
-        app:icon="@drawable/ic_settings" />
 
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

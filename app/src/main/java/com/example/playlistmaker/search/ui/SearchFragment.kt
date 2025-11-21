@@ -1,40 +1,43 @@
 package com.example.playlistmaker.search.ui
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.player.ui.TrackPlayerActivity
-import com.example.playlistmaker.search.ui.model.SearchState
+import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.player.ui.TrackPlayerFragment
 import com.example.playlistmaker.search.domain.model.Track
+import com.example.playlistmaker.search.ui.model.SearchState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySearchBinding
+class SearchFragment : Fragment() {
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModel by viewModel<SearchViewModel>()
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var tracksHistoryAdapter: TrackAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
 
-        viewModel.observeState().observe(this) { state ->
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel.observeState().observe(viewLifecycleOwner) { state ->
             render(state)
-        }
-
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.toolbar.setNavigationOnClickListener {
-            finish()
         }
 
         trackAdapter = TrackAdapter(::openTrackPlayer)
@@ -47,10 +50,15 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (binding.searchInputEditText.hasFocus() && s.toString().isEmpty()) {
-                    viewModel.showHistory()
-                } else {
-                    viewModel.searchDebounce(s.toString())
+                binding.searchInputLayout.isEndIconVisible = s.toString().isNotEmpty()
+                if (!binding.searchInputEditText.hasFocus()){
+                    return
+                } else{
+                    if (s.toString().isEmpty()) {
+                        viewModel.showHistory()
+                    } else {
+                        viewModel.searchDebounce(s.toString())
+                    }
                 }
             }
         })
@@ -63,12 +71,14 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchInputLayout.setEndIconOnClickListener {
             binding.searchInputEditText.text?.clear()
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(binding.searchInputEditText.windowToken, 0)
+            val imm = requireContext().getSystemService(InputMethodManager::class.java)
+            imm.hideSoftInputFromWindow(requireView().windowToken, 0)
 
             binding.trackRecyclerView.visibility = View.GONE
+            binding.searchInputLayout.isEndIconVisible = false
             viewModel.showHistory()
         }
+        binding.searchInputLayout.isEndIconVisible = binding.searchInputEditText.text.toString().isNotEmpty()
 
         binding.placeholderButton.setOnClickListener {
             viewModel.searchDebounce(binding.searchInputEditText.text.toString())
@@ -78,6 +88,11 @@ class SearchActivity : AppCompatActivity() {
             viewModel.clearHistory()
             binding.clickedTracksHistory.visibility = View.GONE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun render(state: SearchState) {
@@ -169,10 +184,14 @@ class SearchActivity : AppCompatActivity() {
 
     private fun openTrackPlayer(track: Track) {
         if (viewModel.onTrackClicked(track)) {
-            startActivity(Intent(this, TrackPlayerActivity::class.java).apply {
-                putExtra(TrackPlayerActivity.TRACK, track)
-            })
+            findNavController().navigate(
+                R.id.action_searchFragment_to_trackPlayerFragment,
+                TrackPlayerFragment.createArgs(track)
+            )
         }
     }
 
+    companion object {
+        fun newInstance() = SearchFragment()
+    }
 }

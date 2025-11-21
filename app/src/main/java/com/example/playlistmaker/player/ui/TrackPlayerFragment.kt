@@ -1,7 +1,11 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -13,26 +17,29 @@ import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TrackPlayerActivity : AppCompatActivity() {
-    private lateinit var binding: TrackPlayerBinding
+class TrackPlayerFragment : Fragment() {
+    private var _binding: TrackPlayerBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var track: Track
     private val viewModel: TrackPlayerViewModel by viewModel {
         parametersOf(track.previewUrl)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = TrackPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = TrackPlayerBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
 
-        track = intent.getParcelableExtra(TRACK)!!
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        binding.toolbar.setNavigationOnClickListener {
-            finish()
-        }
+        track = requireArguments().getParcelable(ARGS_TRACK)!!
 
         binding.apply {
             trackTitle.text = track.trackName
@@ -53,13 +60,13 @@ class TrackPlayerActivity : AppCompatActivity() {
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.track_placeholder)
             .fitCenter()
-            .transform(RoundedCorners(dpToPx(ARTWORK_RADIUS, this)))
+            .transform(RoundedCorners(dpToPx(ARTWORK_RADIUS, requireContext())))
             .into(binding.trackArtworkImage)
 
-        viewModel.observeProgressTime().observe(this) {
+        viewModel.observeProgressTime().observe(viewLifecycleOwner) {
             binding.trackTimer.text = it
         }
-        viewModel.observePlayerState().observe(this) {
+        viewModel.observePlayerState().observe(viewLifecycleOwner) {
             when (it) {
                 TrackPlayerViewModel.STATE_PLAYING ->
                     binding.mainPlayerButton.setImageResource(R.drawable.ic_stop)
@@ -79,13 +86,25 @@ class TrackPlayerActivity : AppCompatActivity() {
         viewModel.pausePlayer()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         viewModel.releasePlayer()
+        _binding = null
     }
 
     companion object {
-        const val ARTWORK_RADIUS = 8f
-        const val TRACK = "track"
+        private const val ARTWORK_RADIUS = 8f
+        private const val ARGS_TRACK = "track"
+
+        const val TAG = "TrackPlayerFragment"
+
+        fun newInstance(track: Track): Fragment {
+            return TrackPlayerFragment().apply {
+                arguments = createArgs(track)
+            }
+        }
+
+        fun createArgs(track: Track): Bundle =
+            bundleOf(ARGS_TRACK to track)
     }
 }

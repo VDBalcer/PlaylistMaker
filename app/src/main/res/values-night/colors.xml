@@ -26,4 +26,8 @@
     <color name="track_player_side_buttons_color">#40FFFFFF</color>
 
     <color name="library_tablayout_text_color">@color/white</color>
+
+    <color name="bottom_nav_item_checked">@color/blue</color>
+    <color name="bottom_nav_item_unchecked">@color/white</color>
+    <color name="main_background">@color/black</color>
 </resources>
