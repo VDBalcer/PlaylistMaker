@@ -14,11 +14,10 @@ import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.TrackPlayerFragment
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.model.SearchState
-import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
-        private var _binding: FragmentSearchBinding? = null
+    private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel by viewModel<SearchViewModel>()
@@ -51,10 +50,15 @@ class SearchFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (binding.searchInputEditText.hasFocus() && s.toString().isEmpty()) {
-                    viewModel.showHistory()
-                } else {
-                    viewModel.searchDebounce(s.toString())
+                binding.searchInputLayout.isEndIconVisible = s.toString().isNotEmpty()
+                if (!binding.searchInputEditText.hasFocus()){
+                    return
+                } else{
+                    if (s.toString().isEmpty()) {
+                        viewModel.showHistory()
+                    } else {
+                        viewModel.searchDebounce(s.toString())
+                    }
                 }
             }
         })
@@ -71,8 +75,10 @@ class SearchFragment : Fragment() {
             imm.hideSoftInputFromWindow(requireView().windowToken, 0)
 
             binding.trackRecyclerView.visibility = View.GONE
+            binding.searchInputLayout.isEndIconVisible = false
             viewModel.showHistory()
         }
+        binding.searchInputLayout.isEndIconVisible = binding.searchInputEditText.text.toString().isNotEmpty()
 
         binding.placeholderButton.setOnClickListener {
             viewModel.searchDebounce(binding.searchInputEditText.text.toString())
