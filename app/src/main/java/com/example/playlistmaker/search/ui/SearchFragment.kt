@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.TrackPlayerFragment
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.model.SearchState
+import com.example.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -25,10 +27,12 @@ class SearchFragment : Fragment() {
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var tracksHistoryAdapter: TrackAdapter
 
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -40,8 +44,20 @@ class SearchFragment : Fragment() {
             render(state)
         }
 
-        trackAdapter = TrackAdapter(::openTrackPlayer)
-        tracksHistoryAdapter = TrackAdapter(::openTrackPlayer)
+        onTrackClickDebounce = debounce(
+            CLICK_DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { track ->
+            viewModel.onTrackClicked(track)
+            findNavController().navigate(
+                R.id.action_searchFragment_to_trackPlayerFragment,
+                TrackPlayerFragment.createArgs(track)
+            )
+        }
+
+        trackAdapter = TrackAdapter(onTrackClickDebounce)
+        tracksHistoryAdapter = TrackAdapter(onTrackClickDebounce)
 
         binding.trackRecyclerView.adapter = trackAdapter
         binding.tracksHistoryRecyclerView.adapter = tracksHistoryAdapter
@@ -51,14 +67,12 @@ class SearchFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.searchInputLayout.isEndIconVisible = s.toString().isNotEmpty()
-                if (!binding.searchInputEditText.hasFocus()){
-                    return
-                } else{
+                if (!binding.searchInputEditText.hasFocus()) {
                     if (s.toString().isEmpty()) {
                         viewModel.showHistory()
-                    } else {
-                        viewModel.searchDebounce(s.toString())
                     }
+                } else {
+                    viewModel.searchDebounce(s.toString())
                 }
             }
         })
@@ -78,7 +92,8 @@ class SearchFragment : Fragment() {
             binding.searchInputLayout.isEndIconVisible = false
             viewModel.showHistory()
         }
-        binding.searchInputLayout.isEndIconVisible = binding.searchInputEditText.text.toString().isNotEmpty()
+        binding.searchInputLayout.isEndIconVisible =
+            binding.searchInputEditText.text.toString().isNotEmpty()
 
         binding.placeholderButton.setOnClickListener {
             viewModel.searchDebounce(binding.searchInputEditText.text.toString())
@@ -182,16 +197,8 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun openTrackPlayer(track: Track) {
-        if (viewModel.onTrackClicked(track)) {
-            findNavController().navigate(
-                R.id.action_searchFragment_to_trackPlayerFragment,
-                TrackPlayerFragment.createArgs(track)
-            )
-        }
-    }
-
     companion object {
         fun newInstance() = SearchFragment()
+        const val CLICK_DEBOUNCE_DELAY = 0L
     }
 }
