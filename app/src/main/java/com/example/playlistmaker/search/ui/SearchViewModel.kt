@@ -10,6 +10,7 @@ import com.example.playlistmaker.search.domain.model.SearchResult
 import com.example.playlistmaker.search.ui.model.SearchState
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.utils.debounce
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val searchTracksInteractor: SearchTracksInteractor,
@@ -28,24 +29,28 @@ class SearchViewModel(
             showHistory()
             return@debounce
         }
-
         stateLiveData.postValue(SearchState.Loading)
-        searchTracksInteractor.searchTracks(query, object : SearchTracksInteractor.TracksConsumer {
-            override fun consume(searchResult: SearchResult) {
-                when (searchResult) {
-                    is SearchResult.Success -> {
-                        if (searchResult.tracks.isEmpty()) {
-                            stateLiveData.postValue(SearchState.Empty)
-                        } else {
-                            stateLiveData.postValue(SearchState.Search(searchResult.tracks))
+        searchTracks(query)
+    }
+
+    private fun searchTracks(query: String) {
+        viewModelScope.launch {
+            searchTracksInteractor
+                .searchTracks(query)
+                .collect { searchResult ->
+                    when (searchResult) {
+                        is SearchResult.Success -> {
+                            if (searchResult.tracks.isEmpty()) {
+                                stateLiveData.postValue(SearchState.Empty)
+                            } else {
+                                stateLiveData.postValue(SearchState.Search(searchResult.tracks))
+                            }
                         }
+
+                        else -> stateLiveData.postValue(SearchState.Error)
                     }
-
-                    else -> stateLiveData.postValue(SearchState.Error)
                 }
-
-            }
-        })
+        }
     }
 
     fun showHistory() {
