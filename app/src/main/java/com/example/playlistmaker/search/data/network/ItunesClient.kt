@@ -2,22 +2,24 @@ package com.example.playlistmaker.search.data.network
 
 import com.example.playlistmaker.search.data.dto.Response
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ItunesClient(private val iTunesService: ItunesApi) : NetworkClient {
 
-    override fun doRequest(dto: Any): Response {
-        return try {
-            if (dto is TracksSearchRequest) {
-                val resp = iTunesService.search(dto.expression).execute()
-
-                val body = resp.body() ?: Response()
-
-                body.apply { resultCode = resp.code() }
-            } else {
-                Response().apply { resultCode = 400 }
+    override suspend fun doRequest(dto: Any): Response {
+        return withContext(Dispatchers.IO) {
+            try {
+                if (dto is TracksSearchRequest) {
+                    val resp = iTunesService.search(dto.expression)
+                    resp.apply { resultCode = 200 }
+                } else {
+                    Response().apply { resultCode = 400 }
+                }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = -1 }
             }
-        } catch (e: Exception) {
-            Response().apply { resultCode = -1 }
         }
+
     }
 }
