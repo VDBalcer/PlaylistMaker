@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackPlayerBinding
+import com.example.playlistmaker.player.ui.model.PlayerState
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.dpToPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -63,14 +64,12 @@ class TrackPlayerFragment : Fragment() {
             .transform(RoundedCorners(dpToPx(ARTWORK_RADIUS, requireContext())))
             .into(binding.trackArtworkImage)
 
-        viewModel.observeProgressTime().observe(viewLifecycleOwner) {
-            binding.trackTimer.text = it
-        }
-        viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            when (it) {
-                TrackPlayerViewModel.STATE_PLAYING ->
-                    binding.mainPlayerButton.setImageResource(R.drawable.ic_stop)
 
+        viewModel.observePlayerState().observe(viewLifecycleOwner) {
+           binding.trackTimer.text = it.progress
+            when (it) {
+                is PlayerState.Playing ->
+                    binding.mainPlayerButton.setImageResource(R.drawable.ic_stop)
                 else ->
                     binding.mainPlayerButton.setImageResource(R.drawable.ic_play)
             }
