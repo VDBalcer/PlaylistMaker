@@ -27,7 +27,6 @@ class SearchHistoryRepositoryImpl(
             val tracks = storage.getData() ?: emptyList()
             val favoriteIdsSet =
                 database.tracksDao().getTracksIds().first().toSet()
-
             tracks.map { track ->
                 track.copy(
                     isFavorite = favoriteIdsSet.contains(track.trackId)
