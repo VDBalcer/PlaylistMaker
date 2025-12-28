@@ -14,9 +14,9 @@ data class TrackDto(
     val releaseDate: String?,
     val primaryGenreName: String?,
     val country: String?,
-    val previewUrl: String?
+    val previewUrl: String?,
 ) {
-    fun toDomain(): Track {
+    fun toDomain(isFavorite: Boolean = false): Track {
         return Track(
             trackId = trackId ?: 0,
             trackName = trackName.orEmpty(),
@@ -32,7 +32,8 @@ data class TrackDto(
             releaseDate = releaseDate.orEmpty(),
             primaryGenreName = primaryGenreName.orEmpty(),
             country = country.orEmpty(),
-            previewUrl = previewUrl.orEmpty()
+            previewUrl = previewUrl.orEmpty(),
+            isFavorite = isFavorite
         )
     }
 }
