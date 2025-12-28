@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.db.domain.FavoriteInteractor
 import com.example.playlistmaker.player.ui.model.PlayerState
+import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -13,18 +15,22 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackPlayerViewModel(
-    trackUrl: String,
-    private val mediaPlayer: MediaPlayer
+    private val track: Track,
+    private val mediaPlayer: MediaPlayer,
+    private val favoriteInteractor: FavoriteInteractor,
 ) : ViewModel() {
 
     private val playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
 
+    private val favoriteLiveData = MutableLiveData(false)
+    fun observeFavoriteState(): LiveData<Boolean> = favoriteLiveData
+
     private val timerFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
     private var timerJob: Job? = null
 
     init {
-        mediaPlayer.setDataSource(trackUrl)
+        mediaPlayer.setDataSource(track.previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             playerStateLiveData.postValue(PlayerState.Prepared())
@@ -33,6 +39,8 @@ class TrackPlayerViewModel(
             timerJob?.cancel()
             playerStateLiveData.postValue(PlayerState.Prepared())
         }
+
+        favoriteLiveData.postValue(track.isFavorite)
     }
 
     fun startPlayer() {
@@ -73,6 +81,18 @@ class TrackPlayerViewModel(
         mediaPlayer.release()
         timerJob?.cancel()
         playerStateLiveData.value = PlayerState.Default()
+    }
+
+    fun onFavoriteClicked() {
+        viewModelScope.launch {
+            if (favoriteLiveData.value == true) {
+                favoriteInteractor.deleteTrack(track)
+                favoriteLiveData.postValue(false)
+            } else {
+                favoriteInteractor.addTrack(track)
+                favoriteLiveData.postValue(true)
+            }
+        }
     }
 
     companion object {

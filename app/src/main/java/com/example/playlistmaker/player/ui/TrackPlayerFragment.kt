@@ -24,7 +24,7 @@ class TrackPlayerFragment : Fragment() {
 
     private lateinit var track: Track
     private val viewModel: TrackPlayerViewModel by viewModel {
-        parametersOf(track.previewUrl)
+        parametersOf(track)
     }
 
     override fun onCreateView(
@@ -76,6 +76,17 @@ class TrackPlayerFragment : Fragment() {
         }
         binding.mainPlayerButton.setOnClickListener {
             viewModel.playButtonClick()
+        }
+
+        viewModel.observeFavoriteState().observe(viewLifecycleOwner) {isFavorite ->
+            if (isFavorite) {
+                binding.addFavoriteButton.setImageResource(R.drawable.ic_heart)
+            } else {
+                binding.addFavoriteButton.setImageResource(R.drawable.ic_unchoosed_heart)
+            }
+        }
+        binding.addFavoriteButton.setOnClickListener{
+            viewModel.onFavoriteClicked()
         }
 
     }
