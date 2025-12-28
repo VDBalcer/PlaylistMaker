@@ -1,12 +1,23 @@
 package com.example.playlistmaker.player.ui.model
 
-sealed class PlayerState(val progress: String) {
+sealed class PlayerState(
+    val progress: String,
+    val isFavorite: Boolean,
+) {
 
-    class Default : PlayerState("00:00")
+    class Default(isFavorite: Boolean) :
+        PlayerState("00:00", isFavorite)
 
-    class   Prepared : PlayerState("00:00")
+    class Prepared(isFavorite: Boolean) :
+        PlayerState("00:00", isFavorite)
 
-    class Playing(progress: String) : PlayerState(progress)
+    class Playing(
+        progress: String,
+        isFavorite: Boolean,
+    ) : PlayerState(progress, isFavorite)
 
-    class Paused(progress: String) : PlayerState(progress)
+    class Paused(
+        progress: String,
+        isFavorite: Boolean,
+    ) : PlayerState(progress, isFavorite)
 }

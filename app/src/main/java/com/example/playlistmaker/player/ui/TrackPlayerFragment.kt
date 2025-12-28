@@ -73,17 +73,15 @@ class TrackPlayerFragment : Fragment() {
                 else ->
                     binding.mainPlayerButton.setImageResource(R.drawable.ic_play)
             }
-        }
-        binding.mainPlayerButton.setOnClickListener {
-            viewModel.playButtonClick()
-        }
-
-        viewModel.observeFavoriteState().observe(viewLifecycleOwner) {isFavorite ->
-            if (isFavorite) {
+            if (it.isFavorite) {
                 binding.addFavoriteButton.setImageResource(R.drawable.ic_heart)
             } else {
                 binding.addFavoriteButton.setImageResource(R.drawable.ic_unchoosed_heart)
             }
+
+        }
+        binding.mainPlayerButton.setOnClickListener {
+            viewModel.playButtonClick()
         }
         binding.addFavoriteButton.setOnClickListener{
             viewModel.onFavoriteClicked()

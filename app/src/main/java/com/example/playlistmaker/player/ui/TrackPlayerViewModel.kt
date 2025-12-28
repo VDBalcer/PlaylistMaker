@@ -20,11 +20,10 @@ class TrackPlayerViewModel(
     private val favoriteInteractor: FavoriteInteractor,
 ) : ViewModel() {
 
-    private val playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
-    fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
+    private val playerStateLiveData =
+        MutableLiveData<PlayerState>(PlayerState.Default(track.isFavorite))
 
-    private val favoriteLiveData = MutableLiveData(false)
-    fun observeFavoriteState(): LiveData<Boolean> = favoriteLiveData
+    fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
 
     private val timerFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
     private var timerJob: Job? = null
@@ -33,26 +32,24 @@ class TrackPlayerViewModel(
         mediaPlayer.setDataSource(track.previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            playerStateLiveData.postValue(PlayerState.Prepared())
+            playerStateLiveData.postValue(PlayerState.Prepared(playerStateLiveData.value!!.isFavorite))
         }
         mediaPlayer.setOnCompletionListener {
             timerJob?.cancel()
-            playerStateLiveData.postValue(PlayerState.Prepared())
+            playerStateLiveData.postValue(PlayerState.Prepared(playerStateLiveData.value!!.isFavorite))
         }
-
-        favoriteLiveData.postValue(track.isFavorite)
     }
 
     fun startPlayer() {
         mediaPlayer.start()
-        playerStateLiveData.postValue(PlayerState.Playing(getCurrentPosition()))
+        playerStateLiveData.postValue(PlayerState.Playing(getCurrentPosition(), playerStateLiveData.value!!.isFavorite))
         startTimerUpdate()
     }
 
     fun pausePlayer() {
         mediaPlayer.pause()
         timerJob?.cancel()
-        playerStateLiveData.postValue(PlayerState.Paused(getCurrentPosition()))
+        playerStateLiveData.postValue(PlayerState.Paused(getCurrentPosition(), playerStateLiveData.value!!.isFavorite))
     }
 
     fun playButtonClick() {
@@ -71,7 +68,12 @@ class TrackPlayerViewModel(
         timerJob = viewModelScope.launch {
             while (mediaPlayer.isPlaying) {
                 delay(DELAY)
-                playerStateLiveData.postValue(PlayerState.Playing(getCurrentPosition()))
+                playerStateLiveData.postValue(
+                    PlayerState.Playing(
+                        getCurrentPosition(),
+                        playerStateLiveData.value!!.isFavorite
+                    )
+                )
             }
         }
     }
@@ -80,20 +82,35 @@ class TrackPlayerViewModel(
         mediaPlayer.stop()
         mediaPlayer.release()
         timerJob?.cancel()
-        playerStateLiveData.value = PlayerState.Default()
+        playerStateLiveData.value = PlayerState.Default(playerStateLiveData.value!!.isFavorite)
     }
 
     fun onFavoriteClicked() {
+        val currentState = playerStateLiveData.value ?: return
+        val newIsFavorite = !currentState.isFavorite
+
         viewModelScope.launch {
-            if (favoriteLiveData.value == true) {
-                favoriteInteractor.deleteTrack(track)
-                favoriteLiveData.postValue(false)
-            } else {
+            if (newIsFavorite) {
                 favoriteInteractor.addTrack(track)
-                favoriteLiveData.postValue(true)
+            } else {
+                favoriteInteractor.deleteTrack(track)
+            }
+            playerStateLiveData.value = when (currentState) {
+                is PlayerState.Default ->
+                    PlayerState.Default(isFavorite = newIsFavorite)
+
+                is PlayerState.Prepared ->
+                    PlayerState.Prepared(isFavorite = newIsFavorite)
+
+                is PlayerState.Playing ->
+                    PlayerState.Playing(getCurrentPosition(), isFavorite = newIsFavorite)
+
+                is PlayerState.Paused ->
+                    PlayerState.Paused(getCurrentPosition(), isFavorite = newIsFavorite)
             }
         }
     }
+
 
     companion object {
         const val DELAY = 250L
