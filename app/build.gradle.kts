@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -53,7 +54,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.glide)
-    annotationProcessor(libs.glide.compiler)
+    kapt(libs.glide.compiler)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.viewmodel.ktx)
@@ -65,4 +66,8 @@ dependencies {
     implementation(libs.navigation.ui.ktx)
     implementation(libs.fragment.ktx)
     implementation(libs.kotlinx.coroutines)
+    //Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
 }
