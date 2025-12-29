@@ -54,20 +54,27 @@ class SearchViewModel(
     }
 
     fun showHistory() {
-        searchHistoryInteractor.getTracksHistory(object : SearchHistoryInteractor.HistoryConsumer {
-            override fun consume(historyTracks: List<Track>) {
-                stateLiveData.postValue(SearchState.History(historyTracks))
-            }
-        })
+        viewModelScope.launch {
+            searchHistoryInteractor.getTracksHistory(object :
+                SearchHistoryInteractor.HistoryConsumer {
+                override fun consume(historyTracks: List<Track>) {
+                    stateLiveData.postValue(SearchState.History(historyTracks))
+                }
+            })
+        }
     }
 
     fun clearHistory() {
-        searchHistoryInteractor.clearHistory()
-        stateLiveData.postValue(SearchState.History(emptyList()))
+        viewModelScope.launch {
+            searchHistoryInteractor.clearHistory()
+            stateLiveData.postValue(SearchState.History(emptyList()))
+        }
     }
 
     fun onTrackClicked(clickedTrack: Track) {
-        searchHistoryInteractor.addTrackToHistory(clickedTrack)
+        viewModelScope.launch {
+            searchHistoryInteractor.addTrackToHistory(clickedTrack)
+        }
     }
 
     companion object {

@@ -4,11 +4,11 @@ import com.example.playlistmaker.search.domain.model.Track
 
 interface SearchHistoryInteractor {
 
-    fun addTrackToHistory(newTrack: Track)
+    suspend fun addTrackToHistory(newTrack: Track)
 
     fun clearHistory()
 
-    fun getTracksHistory(consumer: HistoryConsumer)
+    suspend fun getTracksHistory(consumer: HistoryConsumer)
 
     fun saveTracksToPrefs(tracks: List<Track>)
 
