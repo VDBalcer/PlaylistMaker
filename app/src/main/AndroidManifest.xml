@@ -19,7 +19,7 @@
             android:name=".main.ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.PlaylistMaker"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
