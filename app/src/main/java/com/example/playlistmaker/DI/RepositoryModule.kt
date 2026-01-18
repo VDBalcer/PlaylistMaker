@@ -28,7 +28,7 @@ val repositoryModule = module {
         FavoriteRepositoryImpl(get(), get())
     }
     single<PlaylistsRepository> {
-        PlaylistsRepositoryImpl(get(), get())
+        PlaylistsRepositoryImpl(get(), get(), get())
     }
 
     factory<ThemeSettingsRepository> {
