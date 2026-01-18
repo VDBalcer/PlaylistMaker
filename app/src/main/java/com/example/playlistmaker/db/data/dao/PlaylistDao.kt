@@ -22,5 +22,11 @@ interface PlaylistDao {
     fun insertNewPlaylist(playlistEntity: PlaylistEntity): Long
 
     @Query("DELETE FROM playlists_table WHERE playlistId = :playlistId")
-    fun deleteById(playlistId: Int)
+    fun deletePlaylistById(playlistId: Int)
+
+    @Insert(entity = TrackEntity::class, onConflict = OnConflictStrategy.IGNORE)
+    fun insertNewTrack(trackEntity: TrackEntity)
+
+    @Delete(entity = TrackEntity::class)
+    fun deleteTrackEntity(trackEntity: TrackEntity)
 }
