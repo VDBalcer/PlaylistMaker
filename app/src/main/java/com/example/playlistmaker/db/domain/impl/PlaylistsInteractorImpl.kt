@@ -5,7 +5,10 @@ import com.example.playlistmaker.db.data.storage.ImageStorage
 import com.example.playlistmaker.db.domain.PlaylistsInteractor
 import com.example.playlistmaker.db.domain.PlaylistsRepository
 import com.example.playlistmaker.library.domain.model.Playlist
+import com.example.playlistmaker.search.domain.model.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 
 class PlaylistsInteractorImpl(
     private val repository: PlaylistsRepository,
@@ -37,5 +40,14 @@ class PlaylistsInteractorImpl(
             imageStorage.deleteImage(it)
         }
         repository.deletePlaylist(playlistId)
+    }
+
+    override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist) {
+        withContext(Dispatchers.IO) {
+            repository.addTrack(track)
+            playlist.idsList += track.trackId
+            playlist.tracksCount += 1
+            repository.updatePlaylist(playlist)
+        }
     }
 }

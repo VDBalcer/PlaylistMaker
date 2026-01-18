@@ -1,10 +1,12 @@
 package com.example.playlistmaker.db.data.repository
 
 import com.example.playlistmaker.db.data.converters.PlaylistDbConvertor
+import com.example.playlistmaker.db.data.converters.TrackDbConvertor
 import com.example.playlistmaker.db.data.dao.PlaylistDao
 import com.example.playlistmaker.db.data.entity.PlaylistEntity
 import com.example.playlistmaker.db.domain.PlaylistsRepository
 import com.example.playlistmaker.library.domain.model.Playlist
+import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -12,6 +14,7 @@ import kotlinx.coroutines.flow.map
 class PlaylistsRepositoryImpl(
     private val playlistDao: PlaylistDao,
     private val playlistDbConvertor: PlaylistDbConvertor,
+    private val trackDbConvertor: TrackDbConvertor
 ) : PlaylistsRepository {
 
 
@@ -45,8 +48,18 @@ class PlaylistsRepositoryImpl(
         return playlistDao.insertNewPlaylist(entity).toInt()
     }
 
+    override suspend fun updatePlaylist(newPlaylist: Playlist) {
+        val entity = playlistDbConvertor.map(newPlaylist)
+        playlistDao.insertNewPlaylist(entity)
+    }
+
     override suspend fun deletePlaylist(playlistId: Int) {
-        playlistDao.deleteById(playlistId)
+        playlistDao.deletePlaylistById(playlistId)
+    }
+
+    override suspend fun addTrack(track: Track) {
+            val trackEntity = trackDbConvertor.map(track)
+            playlistDao.insertNewTrack(trackEntity)
     }
 
 }

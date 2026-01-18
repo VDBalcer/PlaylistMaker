@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.db.domain.FavoriteInteractor
+import com.example.playlistmaker.db.domain.PlaylistsInteractor
+import com.example.playlistmaker.library.domain.model.Playlist
 import com.example.playlistmaker.player.ui.model.PlayerState
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.Job
@@ -15,15 +17,22 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackPlayerViewModel(
-    private val track: Track,
+    private var track: Track,
     private val mediaPlayer: MediaPlayer,
     private val favoriteInteractor: FavoriteInteractor,
+    private val playlistsInteractor: PlaylistsInteractor,
 ) : ViewModel() {
 
     private val playerStateLiveData =
         MutableLiveData<PlayerState>(PlayerState.Default(track.isFavorite))
-
     fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
+
+    private val playlistsLiveData =
+        MutableLiveData<List<Playlist>>()
+    fun observePlaylists(): LiveData<List<Playlist>> = playlistsLiveData
+
+    private val _addTrackStatus = MutableLiveData<AddTrackStatus>()
+    fun observeAddTrackStatus(): LiveData<AddTrackStatus> = _addTrackStatus
 
     private val timerFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
     private var timerJob: Job? = null
@@ -40,16 +49,31 @@ class TrackPlayerViewModel(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        releasePlayer()
+    }
+
     fun startPlayer() {
         mediaPlayer.start()
-        playerStateLiveData.postValue(PlayerState.Playing(getCurrentPosition(), playerStateLiveData.value!!.isFavorite))
+        playerStateLiveData.postValue(
+            PlayerState.Playing(
+                getCurrentPosition(),
+                playerStateLiveData.value!!.isFavorite
+            )
+        )
         startTimerUpdate()
     }
 
     fun pausePlayer() {
         mediaPlayer.pause()
         timerJob?.cancel()
-        playerStateLiveData.postValue(PlayerState.Paused(getCurrentPosition(), playerStateLiveData.value!!.isFavorite))
+        playerStateLiveData.postValue(
+            PlayerState.Paused(
+                getCurrentPosition(),
+                playerStateLiveData.value!!.isFavorite
+            )
+        )
     }
 
     fun playButtonClick() {
@@ -88,6 +112,7 @@ class TrackPlayerViewModel(
     fun onFavoriteClicked() {
         val currentState = playerStateLiveData.value ?: return
         val newIsFavorite = !currentState.isFavorite
+        track.isFavorite = newIsFavorite
 
         viewModelScope.launch {
             if (newIsFavorite) {
@@ -108,6 +133,27 @@ class TrackPlayerViewModel(
                 is PlayerState.Paused ->
                     PlayerState.Paused(getCurrentPosition(), isFavorite = newIsFavorite)
             }
+        }
+    }
+
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            playlistsInteractor
+                .playlists()
+                .collect { result ->
+                    playlistsLiveData.postValue(result)
+                }
+        }
+    }
+
+    fun onPlaylistClick(playlist: Playlist) {
+        viewModelScope.launch {
+            if (playlist.idsList.contains(track.trackId)) {
+                _addTrackStatus.postValue(AddTrackStatus.AlreadyExists(playlist.name))
+                return@launch
+            }
+            playlistsInteractor.addTrackToPlaylist(track = track, playlist = playlist)
+            _addTrackStatus.postValue(AddTrackStatus.Added(playlist.name))
         }
     }
 

@@ -16,7 +16,7 @@ class FavoriteRepositoryImpl(
 
     override fun favoriteTracks(): Flow<List<Track>> =
         appDatabase.tracksDao()
-            .getTracks()
+            .getFavoritesTracks()
             .map { trackEntities ->
                 trackEntities.map { entity ->
                     trackDbConvertor.map(entity)

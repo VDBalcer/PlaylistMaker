@@ -10,6 +10,6 @@ data class Playlist(
     val name: String,
     val description: String = "",
     var coverIm: Uri = Uri.EMPTY,
-    val idsList: List<Int> = emptyList(),
-    val tracksCount: Int = 0
+    var idsList: List<Int> = emptyList(),
+    var tracksCount: Int = 0
 ) : Parcelable
