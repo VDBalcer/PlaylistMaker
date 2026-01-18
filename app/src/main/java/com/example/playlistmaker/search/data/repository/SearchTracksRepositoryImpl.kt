@@ -25,7 +25,7 @@ class SearchTracksRepositoryImpl(
 
         val favoriteIdsFlow: Flow<Set<Int>> =
             database.tracksDao()
-                .getTracksIds()
+                .getFavoritesTracksIds()
                 .map { it.toSet() }
 
         return combine(

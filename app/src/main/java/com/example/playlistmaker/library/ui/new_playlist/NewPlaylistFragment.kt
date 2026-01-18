@@ -65,6 +65,7 @@ class NewPlaylistFragment : Fragment() {
         binding.createPlaylistButton.setOnClickListener {
             viewModel.createPlaylist()
             findNavController().popBackStack()
+            Toast.makeText(context, "Плейлист ${binding.playlistNameInputEditText.text} успешно создан!",Toast.LENGTH_SHORT).show()
         }
     }
 
