@@ -142,9 +142,9 @@ class TrackPlayerFragment : Fragment() {
         viewModel.observeAddTrackStatus().observe(viewLifecycleOwner) { status ->
             val message = when (status) {
                 is AddTrackStatus.Added ->
-                    "Трек добавлен в плейлист «${status.playlistName}»"
+                    "Добавлено в плейлист «${status.playlistName}»"
                 is AddTrackStatus.AlreadyExists ->
-                    "Трек уже есть в плейлисте «${status.playlistName}»"
+                    "Трек уже добавлен в плейлист «${status.playlistName}»"
             }
 
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
