@@ -34,7 +34,7 @@ class PlaylistsRepositoryImpl(
             "Creating playlist with non-null id is forbidden"
         }
         val entity = PlaylistEntity(
-            playlistId = 0,
+            playlistId = null,
             playlistName = newPlaylist.name,
             playlistDescription = newPlaylist.description,
             coverIm = newPlaylist.coverIm.toString(),
