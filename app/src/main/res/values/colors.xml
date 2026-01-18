@@ -25,6 +25,7 @@
     <color name="placeholder_image_primary_color">@color/black</color>
 
     <color name="track_player_side_buttons_color">#401A1B22</color>
+    <color name="bottomsheet_upper_line_color">@color/gray</color>
 
     <color name="library_tablayout_text_color">@color/black</color>
 

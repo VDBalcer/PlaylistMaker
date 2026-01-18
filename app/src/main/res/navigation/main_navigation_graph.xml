@@ -35,7 +35,11 @@
         android:id="@+id/trackPlayerFragment"
         android:name="com.example.playlistmaker.player.ui.TrackPlayerFragment"
         android:label=""
-        tools:layout="@layout/track_player" />
+        tools:layout="@layout/track_player" >
+        <action
+            android:id="@+id/action_trackPlayerFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.example.playlistmaker.library.ui.favorite.FavoriteFragment"
