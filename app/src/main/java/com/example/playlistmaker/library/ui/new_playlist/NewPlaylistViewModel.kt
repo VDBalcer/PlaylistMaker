@@ -1,6 +1,5 @@
 package com.example.playlistmaker.library.ui.new_playlist
 
-import android.content.ContentResolver
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,7 +19,7 @@ class NewPlaylistViewModel(
     private val _state =
         MutableLiveData<FormState>(FormState.Default)
 
-    fun observeFormStateState(): LiveData<FormState> = _state
+    fun observeFormState(): LiveData<FormState> = _state
 
 
     fun updateState(

@@ -10,6 +10,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.databinding.PlaylistCreationBinding
@@ -58,13 +59,12 @@ class NewPlaylistFragment : Fragment() {
             viewModel.updateState(description = it.toString())
         }
 
-        viewModel.observeFormStateState().observe(viewLifecycleOwner) {
+        viewModel.observeFormState().observe(viewLifecycleOwner) {
             binding.createPlaylistButton.isEnabled = it.createButtonEnabled
         }
         binding.createPlaylistButton.setOnClickListener {
             viewModel.createPlaylist()
-            Toast.makeText(context, "Кажется, вы что-то создали",Toast.LENGTH_SHORT).show()
-            //TODO:Поменять текстовки
+            findNavController().popBackStack()
         }
     }
 

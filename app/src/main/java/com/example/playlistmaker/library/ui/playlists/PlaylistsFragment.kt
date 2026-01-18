@@ -6,8 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentLibraryPlaylistsBinding
+import com.example.playlistmaker.library.domain.model.Playlist
+import com.example.playlistmaker.library.ui.model.PlaylistsState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
@@ -15,6 +18,8 @@ class PlaylistsFragment : Fragment() {
 
     private var _binding: FragmentLibraryPlaylistsBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var playlistAdapter: PlaylistAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,17 +32,58 @@ class PlaylistsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        playlistsViewModel.observeState().observe(viewLifecycleOwner) { state ->
+            render(state)
+        }
+        playlistsViewModel.getPlaylists()
 
         binding.placeholderButton.setOnClickListener {
             findNavController().navigate(
                 R.id.action_libraryFragment_to_newPlaylistFragment
             )
         }
+
+        playlistAdapter = PlaylistAdapter()
+        binding.playlistsRecycler.adapter = playlistAdapter
+        binding.playlistsRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun render(state: PlaylistsState){
+        when (state) {
+            is PlaylistsState.Loading -> showLoading()
+            is PlaylistsState.Empty -> showPlaceholder()
+            is PlaylistsState.Playlists -> showPlaylists(state.playlists)
+        }
+    }
+
+    private fun showPlaylists(playlists: List<Playlist>) {
+        binding.apply{
+            placeholder.visibility = View.GONE
+            progressBar.visibility = View.GONE
+            playlistsRecycler.visibility = View.VISIBLE
+            playlistAdapter.playlists = playlists
+        }
+    }
+
+    private fun showPlaceholder() {
+        binding.apply{
+            playlistsRecycler.visibility = View.GONE
+            progressBar.visibility = View.GONE
+            placeholder.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showLoading() {
+        binding.apply{
+            placeholder.visibility = View.GONE
+            playlistsRecycler.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+        }
     }
 
     companion object {
