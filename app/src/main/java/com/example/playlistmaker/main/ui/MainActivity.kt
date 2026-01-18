@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+        binding.toolbar.setNavigationOnClickListener {
+            this.onBackPressedDispatcher.onBackPressed()
+        }
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as? NavHostFragment

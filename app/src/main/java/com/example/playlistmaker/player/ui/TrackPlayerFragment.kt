@@ -8,14 +8,11 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackPlayerBinding
 import com.example.playlistmaker.library.domain.model.Playlist
-import com.example.playlistmaker.library.ui.playlists.PlaylistAdapter
 import com.example.playlistmaker.player.ui.model.PlayerState
 import com.example.playlistmaker.search.domain.model.Track
 import com.example.playlistmaker.search.ui.dpToPx
@@ -142,9 +139,9 @@ class TrackPlayerFragment : Fragment() {
         viewModel.observeAddTrackStatus().observe(viewLifecycleOwner) { status ->
             val message = when (status) {
                 is AddTrackStatus.Added ->
-                    "Трек добавлен в плейлист «${status.playlistName}»"
+                    "Добавлено в плейлист «${status.playlistName}»"
                 is AddTrackStatus.AlreadyExists ->
-                    "Трек уже есть в плейлисте «${status.playlistName}»"
+                    "Трек уже добавлен в плейлист «${status.playlistName}»"
             }
 
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
