@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -62,27 +63,27 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun showPlaylists(playlists: List<Playlist>) {
-        binding.apply{
-            placeholder.visibility = View.GONE
-            progressBar.visibility = View.GONE
-            playlistsRecycler.visibility = View.VISIBLE
+        with(binding){
+            placeholder.isVisible = false
+            progressBar.isVisible = false
+            playlistsRecycler.isVisible = true
             playlistAdapter.playlists = playlists
         }
     }
 
     private fun showPlaceholder() {
-        binding.apply{
-            playlistsRecycler.visibility = View.GONE
-            progressBar.visibility = View.GONE
-            placeholder.visibility = View.VISIBLE
+        with(binding){
+            playlistsRecycler.isVisible = false
+            progressBar.isVisible = false
+            placeholder.isVisible = true
         }
     }
 
     private fun showLoading() {
-        binding.apply{
-            placeholder.visibility = View.GONE
-            playlistsRecycler.visibility = View.GONE
-            progressBar.visibility = View.VISIBLE
+        with(binding){
+            placeholder.isVisible = false
+            playlistsRecycler.isVisible = false
+            progressBar.isVisible = true
         }
     }
 

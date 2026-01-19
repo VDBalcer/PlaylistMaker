@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistCreationBinding
 import com.example.playlistmaker.search.ui.dpToPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -51,7 +52,8 @@ class NewPlaylistFragment : Fragment() {
                     viewModel.updateState(im = uri)
                     isPhotoSelected = true
                 } else {
-                    Toast.makeText(context, "Вы ничего не выбрали", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,
+                        getString(R.string.nothing_choosen_toast_text), Toast.LENGTH_SHORT).show()
                 }
             }
         binding.addPhotoIm.setOnClickListener {
@@ -69,10 +71,10 @@ class NewPlaylistFragment : Fragment() {
         }
 
         confirmDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Завершить создание плейлиста?")
-            .setMessage("Все несохраненные данные будут потеряны")
-            .setNeutralButton("Отмена", null)
-            .setPositiveButton("Завершить") { _, _ ->
+            .setTitle(getString(R.string.new_playlist_dialog_title))
+            .setMessage(getString(R.string.new_playlist_dialog_message))
+            .setNeutralButton(getString(R.string.new_playlist_dialog_neutral_button_text), null)
+            .setPositiveButton(getString(R.string.new_playlist_dialog_positive_button_text)) { _, _ ->
                 findNavController().popBackStack()
             }
             .create()
@@ -98,7 +100,10 @@ class NewPlaylistFragment : Fragment() {
             findNavController().popBackStack()
             Toast.makeText(
                 context,
-                "Плейлист ${binding.playlistNameInputEditText.text} успешно создан!",
+                getString(
+                    R.string.new_playlist_creation_message,
+                    binding.playlistNameInputEditText.text
+                ),
                 Toast.LENGTH_SHORT
             ).show()
         }

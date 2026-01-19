@@ -37,4 +37,18 @@
     <string name="create_playlist_description_hint">Описание</string>
     <string name="playlist_creation_title">Новый плейлист</string>
     <string name="track_player_bottom_sheet_title">Добавить в плейлист</string>
+    <string name="nothing_choosen_toast_text">Вы ничего не выбрали</string>
+    <string name="new_playlist_dialog_title">Завершить создание плейлиста?</string>
+    <string name="new_playlist_dialog_message">Все несохраненные данные будут потеряны</string>
+    <string name="new_playlist_dialog_neutral_button_text">Отмена</string>
+    <string name="new_playlist_dialog_positive_button_text">Завершить</string>
+    <string name="new_playlist_creation_message">Плейлист %1$s успешно создан!</string>
+    <string name="track_player_add_to_playlist_success_message">Добавлено в плейлист «%1$s»</string>
+    <string name="track_player_already_added_to_playlist_message">Трек уже добавлен в плейлист «%1$s»</string>
+    <plurals name="track_count">
+        <item quantity="one">%1$d трек</item>
+        <item quantity="few">%1$d трека</item>
+        <item quantity="many">%1$d треков</item>
+        <item quantity="other">%1$d треков</item>
+    </plurals>
 </resources>

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -55,20 +56,20 @@ class TrackPlayerFragment : Fragment() {
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet).apply {
             state = bottomsheetState
-            if (bottomsheetState == BottomSheetBehavior.STATE_HIDDEN) binding.overlay.visibility =
-                View.GONE
-            else binding.overlay.visibility = View.VISIBLE
+            if (bottomsheetState == BottomSheetBehavior.STATE_HIDDEN) binding.overlay.isVisible =
+                false
+            else binding.overlay.isVisible = true
         }
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.overlay.visibility = View.GONE
+                        binding.overlay.isVisible = false
                     }
 
                     else -> {
-                        binding.overlay.visibility = View.VISIBLE
+                        binding.overlay.isVisible = true
                         viewModel.loadPlaylists()
                     }
                 }
@@ -139,9 +140,16 @@ class TrackPlayerFragment : Fragment() {
         viewModel.observeAddTrackStatus().observe(viewLifecycleOwner) { status ->
             val message = when (status) {
                 is AddTrackStatus.Added ->
-                    "Добавлено в плейлист «${status.playlistName}»"
+                    getString(
+                        R.string.track_player_add_to_playlist_success_message,
+                        status.playlistName
+                    )
+
                 is AddTrackStatus.AlreadyExists ->
-                    "Трек уже добавлен в плейлист «${status.playlistName}»"
+                    getString(
+                        R.string.track_player_already_added_to_playlist_message,
+                        status.playlistName
+                    )
             }
 
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

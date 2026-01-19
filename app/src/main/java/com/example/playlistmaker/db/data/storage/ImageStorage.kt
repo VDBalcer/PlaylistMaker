@@ -12,28 +12,25 @@ import java.io.FileOutputStream
 class ImageStorage(private val context: Context) {
 
     fun saveImage(uri: Uri): Uri {
-        if (uri != Uri.EMPTY) {
-            val directory = File(
-                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                "playlists"
-            )
+        if (uri == Uri.EMPTY) return Uri.EMPTY
+        val directory = File(
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "playlists"
+        )
 
-            if (!directory.exists()) {
-                directory.mkdirs()
-            }
-
-            val file = File(directory, "cover_${System.currentTimeMillis()}.jpg")
-            //TODO: Подумать над названиями файлов
-
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                FileOutputStream(file).use { output ->
-                    BitmapFactory.decodeStream(input)
-                        .compress(Bitmap.CompressFormat.JPEG, 30, output)
-                }
-            }
-            return Uri.fromFile(file)
+        if (!directory.exists()) {
+            directory.mkdirs()
         }
-        return Uri.EMPTY
+
+        val file = File(directory, "cover_${System.currentTimeMillis()}.jpg")
+
+        context.contentResolver.openInputStream(uri)?.use { input ->
+            FileOutputStream(file).use { output ->
+                BitmapFactory.decodeStream(input)
+                    .compress(Bitmap.CompressFormat.JPEG, 30, output)
+            }
+        }
+        return Uri.fromFile(file)
     }
 
     fun deleteImage(path: Uri) {

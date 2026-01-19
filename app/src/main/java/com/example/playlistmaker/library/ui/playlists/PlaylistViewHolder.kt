@@ -10,7 +10,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ItemPlaylistBinding
 import com.example.playlistmaker.library.domain.model.Playlist
-import com.example.playlistmaker.utils.formatTrackCount
 
 class PlaylistViewHolder(
     private val binding: ItemPlaylistBinding,
@@ -19,7 +18,11 @@ class PlaylistViewHolder(
 
     fun bind(item: Playlist){
         binding.playlistTitle.text = item.name
-        binding.playlistTracksCount.text = formatTrackCount(item.tracksCount)
+        binding.playlistTracksCount.text = itemView.context.resources.getQuantityString(
+            R.plurals.track_count,
+            item.tracksCount,
+            item.tracksCount
+        )
 
         val cornerRadius = dpToPx(CORNER_RADIUS, itemView.context)
         Glide.with(itemView)
