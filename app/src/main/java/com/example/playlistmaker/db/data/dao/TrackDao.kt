@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TrackDao {
 
-    @Query("SELECT * FROM tracks_table")
-    fun getTracks(): Flow<List<TrackEntity>>
+    @Query("SELECT * FROM tracks_table WHERE isFavorite = true")
+    fun getFavoritesTracks(): Flow<List<TrackEntity>>
 
-    @Query("SELECT trackId FROM tracks_table")
-    fun getTracksIds(): Flow<List<Int>>
+    @Query("SELECT trackId FROM tracks_table WHERE isFavorite = true")
+    fun getFavoritesTracksIds(): Flow<List<Int>>
 
     @Insert(entity = TrackEntity::class, onConflict = OnConflictStrategy.REPLACE)
     fun insertNewTrack(trackEntity: TrackEntity)
