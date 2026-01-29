@@ -58,4 +58,20 @@ class PlaylistsInteractorImpl(
             repository.updatePlaylist(playlist)
         }
     }
+
+    override suspend fun deleteTrackFromPlaylist(track: Track, playlist: Playlist) {
+        withContext(Dispatchers.IO) {
+            playlist.idsList -= track.trackId
+            playlist.tracksCount -= 1
+            repository.updatePlaylist(playlist)
+            val idsInPlaylists = repository.getAllTracksInPlaylists()
+
+            val isNotUsedInPlaylists = track.trackId !in idsInPlaylists
+            val isNotFavorite = !track.isFavorite
+
+            if (isNotUsedInPlaylists && isNotFavorite) {
+                repository.deleteTrackById(track.trackId)
+            }
+        }
+    }
 }

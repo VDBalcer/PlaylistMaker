@@ -29,4 +29,7 @@ interface PlaylistDao {
 
     @Delete(entity = TrackEntity::class)
     fun deleteTrackEntity(trackEntity: TrackEntity)
+
+    @Query("SELECT idsList FROM playlists_table")
+    fun getAllTracksInPlaylists(): List<String>
 }

@@ -25,7 +25,7 @@ val interactorModule = module {
         SearchHistoryInteractorImpl(get())
     }
     single<FavoriteInteractor> {
-        FavoriteInteractorImpl(get())
+        FavoriteInteractorImpl(get(), get())
     }
     single<PlaylistsInteractor> {
         PlaylistsInteractorImpl(get(), get())

@@ -58,4 +58,7 @@
         <item quantity="other">%1$d минут</item>
     </plurals>
     <string name="playlist_descriptor">%1$s • %2$s</string>
+    <string name="remove_track_dialog_title">Хотите удалить трек?</string>
+    <string name="remove_track_dialog_negative_text">Нет</string>
+    <string name="remove_track_dialog_positive_text">Да</string>
 </resources>

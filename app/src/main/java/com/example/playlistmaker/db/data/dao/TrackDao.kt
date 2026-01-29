@@ -27,4 +27,6 @@ interface TrackDao {
     @Delete(entity = TrackEntity::class)
     fun deleteTrackEntity(trackEntity: TrackEntity)
 
+    @Query("DELETE FROM tracks_table WHERE trackId = :id")
+    fun deleteTrackById(id: Int)
 }

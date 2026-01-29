@@ -8,6 +8,8 @@ import com.example.playlistmaker.db.data.entity.PlaylistEntity
 import com.example.playlistmaker.db.domain.PlaylistsRepository
 import com.example.playlistmaker.library.domain.model.Playlist
 import com.example.playlistmaker.search.domain.model.Track
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -16,6 +18,7 @@ class PlaylistsRepositoryImpl(
     private val playlistDbConvertor: PlaylistDbConvertor,
     private val trackDbConvertor: TrackDbConvertor,
     private val trackDao: TrackDao,
+    private val gson: Gson,
 ) : PlaylistsRepository {
 
 
@@ -74,4 +77,15 @@ class PlaylistsRepositoryImpl(
         playlistDao.insertNewTrack(trackEntity)
     }
 
+    override suspend fun getAllTracksInPlaylists(): List<Int> {
+        val idsListType = object : TypeToken<List<Int>>() {}.type
+        return playlistDao.getAllTracksInPlaylists().flatMap { json ->
+            val list: List<Int> = gson.fromJson(json, idsListType)
+            list
+        }
+    }
+
+    override suspend fun deleteTrackById(trackId: Int) {
+        trackDao.deleteTrackById(trackId)
+    }
 }
