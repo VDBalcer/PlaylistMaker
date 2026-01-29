@@ -42,7 +42,8 @@ class PlaylistsRepositoryImpl(
             playlistDescription = newPlaylist.description,
             coverIm = newPlaylist.coverIm.toString(),
             idsList = "[]",
-            tracksCount = 0
+            tracksCount = 0,
+            tracksLength = 0
         )
 
         return playlistDao.insertNewPlaylist(entity).toInt()

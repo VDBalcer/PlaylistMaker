@@ -47,7 +47,17 @@ class PlaylistsInteractorImpl(
             repository.addTrack(track)
             playlist.idsList += track.trackId
             playlist.tracksCount += 1
+            playlist.tracksLength += mmSsToSeconds(track.trackTime)
             repository.updatePlaylist(playlist)
         }
+    }
+
+    private fun mmSsToSeconds(time: String): Int {
+        val delimiterIndex = time.indexOf(':')
+        if (delimiterIndex == -1) return 0
+
+        val minutes = time.substring(0, delimiterIndex).toIntOrNull() ?: 0
+        val seconds = time.substring(delimiterIndex + 1).toIntOrNull() ?: 0
+        return (minutes * 60) + seconds
     }
 }

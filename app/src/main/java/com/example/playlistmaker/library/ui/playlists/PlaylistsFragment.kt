@@ -6,12 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentLibraryPlaylistsBinding
 import com.example.playlistmaker.library.domain.model.Playlist
 import com.example.playlistmaker.library.ui.model.PlaylistsState
+import com.example.playlistmaker.library.ui.playlist_screen.PlaylistScreenFragment
+import com.example.playlistmaker.search.ui.SearchFragment.Companion.CLICK_DEBOUNCE_DELAY
+import com.example.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
@@ -21,6 +25,7 @@ class PlaylistsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var playlistAdapter: PlaylistAdapter
+    private lateinit var onPlaylistClickDebounce: (Playlist) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +49,17 @@ class PlaylistsFragment : Fragment() {
             )
         }
 
-        playlistAdapter = PlaylistAdapter()
+        onPlaylistClickDebounce = debounce(
+            CLICK_DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { playlist ->
+            findNavController().navigate(
+                R.id.action_libraryFragment_to_playlistScreenFragment,
+                PlaylistScreenFragment.createArgs(playlist)
+            )
+        }
+        playlistAdapter = PlaylistAdapter(onPlaylistClickDebounce)
         binding.playlistsRecycler.adapter = playlistAdapter
         binding.playlistsRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
     }

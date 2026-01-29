@@ -15,7 +15,8 @@ class PlaylistDbConvertor(private val gson: Gson) {
             playlistDescription = playlist.description,
             coverIm = playlist.coverIm.toString(),
             idsList = gson.toJson(playlist.idsList),
-            tracksCount = playlist.tracksCount
+            tracksCount = playlist.tracksCount,
+            tracksLength = playlist.tracksLength
         )
     }
 
@@ -27,7 +28,8 @@ class PlaylistDbConvertor(private val gson: Gson) {
             description = playlist.playlistDescription,
             coverIm = playlist.coverIm.toUri(),
             idsList = gson.fromJson(playlist.idsList, idsListType),
-            tracksCount = playlist.tracksCount
+            tracksCount = playlist.tracksCount,
+            tracksLength = playlist.tracksLength
         )
     }
 }
