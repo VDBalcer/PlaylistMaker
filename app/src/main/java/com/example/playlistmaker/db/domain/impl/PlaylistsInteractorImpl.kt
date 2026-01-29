@@ -8,6 +8,7 @@ import com.example.playlistmaker.library.domain.model.Playlist
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class PlaylistsInteractorImpl(
@@ -17,6 +18,14 @@ class PlaylistsInteractorImpl(
 
     override fun playlists(): Flow<List<Playlist>> {
         return repository.playlists()
+    }
+
+    override fun getPlaylistById(playlistId: Int): Flow<Playlist> {
+        return repository.getById(playlistId)
+    }
+
+    override fun getTracksByIds(ids: List<Int>): Flow<List<Track>> {
+        return repository.getTracksByIds(ids)
     }
 
     override suspend fun addPlaylist(
@@ -34,8 +43,7 @@ class PlaylistsInteractorImpl(
     }
 
     override suspend fun deletePlaylist(playlistId: Int) {
-        val playlist = repository.getById(playlistId)
-            ?: return
+        val playlist = repository.getById(playlistId).first()
         playlist.coverIm.let {
             imageStorage.deleteImage(it)
         }
@@ -47,17 +55,7 @@ class PlaylistsInteractorImpl(
             repository.addTrack(track)
             playlist.idsList += track.trackId
             playlist.tracksCount += 1
-            playlist.tracksLength += mmSsToSeconds(track.trackTime)
             repository.updatePlaylist(playlist)
         }
-    }
-
-    private fun mmSsToSeconds(time: String): Int {
-        val delimiterIndex = time.indexOf(':')
-        if (delimiterIndex == -1) return 0
-
-        val minutes = time.substring(0, delimiterIndex).toIntOrNull() ?: 0
-        val seconds = time.substring(delimiterIndex + 1).toIntOrNull() ?: 0
-        return (minutes * 60) + seconds
     }
 }

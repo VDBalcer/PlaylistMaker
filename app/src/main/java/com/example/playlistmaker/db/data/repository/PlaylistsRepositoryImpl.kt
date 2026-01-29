@@ -3,18 +3,19 @@ package com.example.playlistmaker.db.data.repository
 import com.example.playlistmaker.db.data.converters.PlaylistDbConvertor
 import com.example.playlistmaker.db.data.converters.TrackDbConvertor
 import com.example.playlistmaker.db.data.dao.PlaylistDao
+import com.example.playlistmaker.db.data.dao.TrackDao
 import com.example.playlistmaker.db.data.entity.PlaylistEntity
 import com.example.playlistmaker.db.domain.PlaylistsRepository
 import com.example.playlistmaker.library.domain.model.Playlist
 import com.example.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 class PlaylistsRepositoryImpl(
     private val playlistDao: PlaylistDao,
     private val playlistDbConvertor: PlaylistDbConvertor,
-    private val trackDbConvertor: TrackDbConvertor
+    private val trackDbConvertor: TrackDbConvertor,
+    private val trackDao: TrackDao,
 ) : PlaylistsRepository {
 
 
@@ -27,10 +28,21 @@ class PlaylistsRepositoryImpl(
                 }
             }
 
-    override suspend fun getById(id: Int): Playlist? {
-        val entity = playlistDao.getById(id).firstOrNull() ?: return null
-        return playlistDbConvertor.map(entity)
-    }
+    override fun getById(id: Int): Flow<Playlist> =
+        playlistDao
+            .getPlaylistById(id)
+            .map { playlistEntity ->
+                playlistDbConvertor.map(playlistEntity)
+            }
+
+    override fun getTracksByIds(ids: List<Int>): Flow<List<Track>> =
+        trackDao
+            .getTracksByIds(ids)
+            .map { tracksList ->
+                tracksList.map { trackEntity ->
+                    trackDbConvertor.map(trackEntity)
+                }
+            }
 
     override suspend fun createPlaylist(newPlaylist: Playlist): Int {
         require(newPlaylist.id == null) {
@@ -42,8 +54,7 @@ class PlaylistsRepositoryImpl(
             playlistDescription = newPlaylist.description,
             coverIm = newPlaylist.coverIm.toString(),
             idsList = "[]",
-            tracksCount = 0,
-            tracksLength = 0
+            tracksCount = 0
         )
 
         return playlistDao.insertNewPlaylist(entity).toInt()
@@ -59,8 +70,8 @@ class PlaylistsRepositoryImpl(
     }
 
     override suspend fun addTrack(track: Track) {
-            val trackEntity = trackDbConvertor.map(track)
-            playlistDao.insertNewTrack(trackEntity)
+        val trackEntity = trackDbConvertor.map(track)
+        playlistDao.insertNewTrack(trackEntity)
     }
 
 }

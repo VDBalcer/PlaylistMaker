@@ -16,7 +16,7 @@ interface PlaylistDao {
     fun getPlaylists(): Flow<List<PlaylistEntity>>
 
     @Query("SELECT * FROM playlists_table WHERE playlistId = :id")
-    fun getById(id: Int): Flow<PlaylistEntity>
+    fun getPlaylistById(id: Int): Flow<PlaylistEntity>
 
     @Insert(entity = PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
     fun insertNewPlaylist(playlistEntity: PlaylistEntity): Long

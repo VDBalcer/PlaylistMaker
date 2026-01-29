@@ -56,7 +56,7 @@ class PlaylistsFragment : Fragment() {
         ) { playlist ->
             findNavController().navigate(
                 R.id.action_libraryFragment_to_playlistScreenFragment,
-                PlaylistScreenFragment.createArgs(playlist)
+                PlaylistScreenFragment.createArgs(playlist.id!!)
             )
         }
         playlistAdapter = PlaylistAdapter(onPlaylistClickDebounce)

@@ -4,6 +4,7 @@ import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.playlistmaker.db.AppDatabase
 import com.example.playlistmaker.db.data.dao.PlaylistDao
+import com.example.playlistmaker.db.data.dao.TrackDao
 import com.example.playlistmaker.db.data.storage.ImageStorage
 import com.example.playlistmaker.search.data.network.ItunesApi
 import com.example.playlistmaker.search.data.network.ItunesClient
@@ -67,6 +68,9 @@ val dataModule = module {
 
     single<PlaylistDao> {
         get<AppDatabase>().playlistDao()
+    }
+    single<TrackDao> {
+        get<AppDatabase>().tracksDao()
     }
 
     single {

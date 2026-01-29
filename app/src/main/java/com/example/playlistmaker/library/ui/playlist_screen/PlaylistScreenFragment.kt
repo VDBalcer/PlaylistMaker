@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistScreenBinding
 import com.example.playlistmaker.library.domain.model.Playlist
+import com.example.playlistmaker.library.ui.playlist_screen.model.PlaylistScreenState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -19,8 +20,6 @@ class PlaylistScreenFragment : Fragment() {
 
     private var _binding: FragmentPlaylistScreenBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var playlist: Playlist
 
     private var bottomsheetState: Int = BottomSheetBehavior.STATE_HIDDEN
 
@@ -36,15 +35,16 @@ class PlaylistScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        playlist = requireArguments().getParcelable(ARGS_PLAYLIST)!!
-
-        binding.apply {
-            playlistTitle.text = playlist.name
-            playlistDescription.text = playlist.description
-            playlistInfo.text = getPlaylistInfo()
+        viewModel.observePlaylist().observe(viewLifecycleOwner) { state ->
+            binding.apply {
+                playlistTitle.text = state.playlist.name
+                playlistDescription.text = state.playlist.description
+                playlistInfo.text = getPlaylistInfo(state)
+            }
+            Glide.with(this).load(state.playlist.coverIm).placeholder(R.drawable.track_placeholder)
+                .fitCenter().into(binding.playlistCoverIm)
         }
-        Glide.with(this).load(playlist.coverIm).placeholder(R.drawable.track_placeholder)
-            .fitCenter().into(binding.playlistCoverIm)
+        viewModel.loadPlaylistInfo(requireArguments().getInt(ARGS_PLAYLIST_ID))
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.optionsBottomSheet).apply {
             state = bottomsheetState
@@ -75,19 +75,18 @@ class PlaylistScreenFragment : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
-
-    private fun getPlaylistInfo(): String {
+    private fun getPlaylistInfo(state: PlaylistScreenState): String {
         val tracksCont = requireContext().resources.getQuantityString(
-            R.plurals.track_count, playlist.tracksCount, playlist.tracksCount
+            R.plurals.track_count, state.playlist.tracksCount, state.playlist.tracksCount
         )
         val tracksLength = requireContext().resources.getQuantityString(
-            R.plurals.minutes_count, playlist.tracksLength / 60, playlist.tracksLength / 60
+            R.plurals.minutes_count, state.totalDurationSeconds / 60, state.totalDurationSeconds / 60
         )
         return getString(R.string.playlist_descriptor, tracksLength, tracksCont)
     }
 
     companion object {
-        private const val ARGS_PLAYLIST = "playlist"
-        fun createArgs(playlist: Playlist): Bundle = bundleOf(ARGS_PLAYLIST to playlist)
+        private const val ARGS_PLAYLIST_ID = "playlistId"
+        fun createArgs(playlistId: Int): Bundle = bundleOf(ARGS_PLAYLIST_ID to playlistId)
     }
 }

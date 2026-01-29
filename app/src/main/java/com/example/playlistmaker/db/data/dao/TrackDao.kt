@@ -18,6 +18,9 @@ interface TrackDao {
     @Query("SELECT trackId FROM tracks_table WHERE isFavorite = true")
     fun getFavoritesTracksIds(): Flow<List<Int>>
 
+    @Query("SELECT * FROM tracks_table WHERE trackId IN (:ids)")
+    fun getTracksByIds(ids: List<Int>): Flow<List<TrackEntity>>
+
     @Insert(entity = TrackEntity::class, onConflict = OnConflictStrategy.REPLACE)
     fun insertNewTrack(trackEntity: TrackEntity)
 
