@@ -32,8 +32,7 @@ class FavoriteInteractorImpl(
 
             if (isNotUsedInPlaylists && isNotFavorite) {
                 favoriteRepository.deleteTrack(track)
-            }
-
+            } else favoriteRepository.addTrack(track)
         }
     }
 }

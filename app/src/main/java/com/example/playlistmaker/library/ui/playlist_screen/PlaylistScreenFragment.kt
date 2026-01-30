@@ -82,7 +82,7 @@ class PlaylistScreenFragment : Fragment() {
                 playlistDescription.text = state.playlist.description
                 playlistInfo.text = getPlaylistInfo(state)
             }
-            
+
             isTracksEmpty = state.tracks.isEmpty()
             trackAdapter.tracks = state.tracks
             trackAdapter.notifyDataSetChanged()
@@ -133,13 +133,25 @@ class PlaylistScreenFragment : Fragment() {
             if (isTracksEmpty) emptyListToast.show()
             else viewModel.onSharePlaylistClicked(playlistId)
         }
+        binding.icMenu.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
         binding.sharePlaylist.setOnClickListener {
             if (isTracksEmpty) emptyListToast.show()
             else viewModel.onSharePlaylistClicked(playlistId)
         }
-        binding.icMenu.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        val confirmDialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Хотите удалить плейлист?")
+            .setNegativeButton(getString(R.string.remove_track_dialog_negative_text), null)
+            .setPositiveButton(getString(R.string.remove_track_dialog_positive_text)) { _, _ ->
+                viewModel.deletePlaylist(playlistId)
+                findNavController().popBackStack()
+            }
+            .create()
+        binding.deletePlaylist.setOnClickListener{
+            confirmDialog.show()
         }
+
     }
 
     private fun getPlaylistInfo(state: PlaylistScreenState): String {

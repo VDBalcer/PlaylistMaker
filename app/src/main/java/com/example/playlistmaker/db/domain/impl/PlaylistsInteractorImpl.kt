@@ -43,11 +43,25 @@ class PlaylistsInteractorImpl(
     }
 
     override suspend fun deletePlaylist(playlistId: Int) {
-        val playlist = repository.getById(playlistId).first()
-        playlist.coverIm.let {
-            imageStorage.deleteImage(it)
+        withContext(Dispatchers.IO) {
+            val playlist = repository.getById(playlistId).first()
+            val tracks = repository.getTracksByIds(playlist.idsList).first()
+
+            playlist.coverIm.let {
+                imageStorage.deleteImage(it)
+            }
+            repository.deletePlaylist(playlistId)
+
+            val idsInPlaylists = repository.getAllTracksInPlaylists()
+            tracks.forEach { track ->
+                val isNotUsedInPlaylists = track.trackId !in idsInPlaylists
+                val isNotFavorite = !track.isFavorite
+
+                if (isNotUsedInPlaylists && isNotFavorite) {
+                    repository.deleteTrackById(track.trackId)
+                }
+            }
         }
-        repository.deletePlaylist(playlistId)
     }
 
     override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist) {

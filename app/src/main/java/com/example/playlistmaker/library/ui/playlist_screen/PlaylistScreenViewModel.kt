@@ -33,6 +33,11 @@ class PlaylistScreenViewModel(
             playlistsInteractor.deleteTrackFromPlaylist(track, playlistLiveData.value!!.playlist)
         }
     }
+    fun deletePlaylist(playlistId: Int){
+        viewModelScope.launch {
+            playlistsInteractor.deletePlaylist(playlistId)
+        }
+    }
 
     fun onSharePlaylistClicked(playlistId: Int) {
         viewModelScope.launch {
