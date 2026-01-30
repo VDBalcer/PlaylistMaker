@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -22,6 +23,7 @@ import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.utils.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistScreenFragment : Fragment() {
@@ -36,6 +38,8 @@ class PlaylistScreenFragment : Fragment() {
     private lateinit var onTrackClickDebounce: (Track) -> Unit
     private lateinit var onTrackLongClick: (Track) -> Unit
 
+    private var isTracksEmpty = true
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,7 +52,7 @@ class PlaylistScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val playlistId = requireArguments().getInt(ARGS_PLAYLIST_ID)
         onTrackClickDebounce = debounce(
             CLICK_DEBOUNCE_DELAY,
             viewLifecycleOwner.lifecycleScope,
@@ -78,13 +82,23 @@ class PlaylistScreenFragment : Fragment() {
                 playlistDescription.text = state.playlist.description
                 playlistInfo.text = getPlaylistInfo(state)
             }
-            Glide.with(this).load(state.playlist.coverIm).placeholder(R.drawable.track_placeholder)
-                .fitCenter().into(binding.playlistCoverIm)
-
+            
+            isTracksEmpty = state.tracks.isEmpty()
             trackAdapter.tracks = state.tracks
             trackAdapter.notifyDataSetChanged()
+
+            binding.itemPlaylistHorizontal.apply {
+                Glide.with(this@PlaylistScreenFragment).load(state.playlist.coverIm)
+                    .placeholder(R.drawable.track_placeholder)
+                    .fitCenter().into(playlistCoverIm)
+                playlistTitle.text = state.playlist.name
+                playlistDescription.text = requireContext().resources.getQuantityString(
+                    R.plurals.track_count, state.playlist.tracksCount, state.playlist.tracksCount
+                )
+            }
+
         }
-        viewModel.loadPlaylistInfo(requireArguments().getInt(ARGS_PLAYLIST_ID))
+        viewModel.loadPlaylistInfo(playlistId)
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.optionsBottomSheet).apply {
             state = bottomsheetState
@@ -110,9 +124,19 @@ class PlaylistScreenFragment : Fragment() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
-
-
-
+        val emptyListToast = Toast.makeText(
+            context,
+            getString(R.string.empty_playlist_toast_text),
+            Toast.LENGTH_SHORT
+        )
+        binding.icShare.setOnClickListener {
+            if (isTracksEmpty) emptyListToast.show()
+            else viewModel.onSharePlaylistClicked(playlistId)
+        }
+        binding.sharePlaylist.setOnClickListener {
+            if (isTracksEmpty) emptyListToast.show()
+            else viewModel.onSharePlaylistClicked(playlistId)
+        }
         binding.icMenu.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }

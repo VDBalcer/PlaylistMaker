@@ -152,7 +152,8 @@
                 android:background="@drawable/bottomsheet_upper_line" />
 
             <include
-                layout="@layout/item_playlist_horizontal"
+                android:id="@+id/item_playlist_horizontal"
+            layout="@layout/item_playlist_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp" />

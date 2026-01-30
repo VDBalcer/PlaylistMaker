@@ -6,4 +6,5 @@ interface ResourceProvider {
     fun getShareAppLink(): String
     fun getSupportEmailData(): EmailData
     fun getTermsLink(): String
+    fun getTrackCountString(count: Int): String
 }
