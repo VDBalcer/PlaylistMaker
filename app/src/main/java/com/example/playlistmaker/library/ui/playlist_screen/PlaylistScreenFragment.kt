@@ -90,6 +90,8 @@ class PlaylistScreenFragment : Fragment() {
             }
 
             isTracksEmpty = state.tracks.isEmpty()
+            binding.placeholderIm.isVisible = isTracksEmpty
+            binding.placeholderTitle.isVisible = isTracksEmpty
             trackAdapter.tracks = state.tracks
             trackAdapter.notifyDataSetChanged()
 

@@ -128,7 +128,24 @@
                         android:layout_height="match_parent"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:listitem="@layout/item_track"
-                        tools:itemCount="2"/>
+                        tools:itemCount="0"/>
+
+
+
+                        <ImageView
+                            android:id="@+id/placeholder_im"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:src="@drawable/im_not_found" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/placeholder_title"
+                            style="@style/PlaceholderText.Title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/playlist_no_added_tracks_placeholder_description" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
