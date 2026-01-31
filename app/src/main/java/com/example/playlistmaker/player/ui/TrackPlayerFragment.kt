@@ -126,7 +126,7 @@ class TrackPlayerFragment : Fragment() {
         binding.addTrackButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
-        binding.overlay.setOnClickListener{
+        binding.overlay.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
         binding.placeholderButton.setOnClickListener {
@@ -141,15 +141,18 @@ class TrackPlayerFragment : Fragment() {
             playlistAdapter.notifyDataSetChanged()
         }
         viewModel.observeAddTrackStatus().observe(viewLifecycleOwner) { status ->
-            val message = when (status) {
-                is AddTrackStatus.Added ->
-                    getString(
+            val message: String
+            when (status) {
+                is AddTrackStatus.Added -> {
+                    message = getString(
                         R.string.track_player_add_to_playlist_success_message,
                         status.playlistName
                     )
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
 
                 is AddTrackStatus.AlreadyExists ->
-                    getString(
+                    message = getString(
                         R.string.track_player_already_added_to_playlist_message,
                         status.playlistName
                     )
