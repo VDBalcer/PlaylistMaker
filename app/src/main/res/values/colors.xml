@@ -33,5 +33,8 @@
     <color name="bottom_nav_item_unchecked">@color/black</color>
     <color name="main_background">@color/white</color>
 
-    <color name="playlist_creation_box_stroke_color">@color/gray</color>
+    <color name="playlist_creation_box_stroke_color_focused">@color/blue</color>
+    <color name="playlist_creation_box_stroke_color_unfocused">@color/gray</color>
+
+    <color name="search_text_hint_color">@color/gray</color>
 </resources>
