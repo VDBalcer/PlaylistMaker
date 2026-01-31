@@ -8,57 +8,78 @@
     app:cardBackgroundColor="@color/item_track_background_color"
     app:cardElevation="@dimen/track_item_card_elevation">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:foreground="?attr/selectableItemBackground">
+        android:foreground="?attr/selectableItemBackground"
+        android:paddingVertical="@dimen/track_item_artwork_margin_vertical">
 
         <ImageView
             android:id="@+id/track_artwork_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/track_item_artwork_margin_vertical"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_marginStart="@dimen/track_item_artwork_margin_start"
             android:scaleType="centerCrop"
-            android:src="@drawable/track_placeholder" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/track_placeholder" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/track_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/track_item_text_margin_start"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_marginEnd="@dimen/track_item_icon_margin_start"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/item_track_title_text_color"
+            android:textSize="@dimen/common_text_size"
+            app:layout_constraintEnd_toStartOf="@+id/iv_arrow"
+            app:layout_constraintStart_toEndOf="@+id/track_artwork_image"
+            app:layout_constraintTop_toTopOf="@+id/track_artwork_image"
+            tools:text="Track Name" />
 
-            <TextView
-                android:id="@+id/track_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:maxLines="1"
-                android:textColor="@color/item_track_title_text_color"
-                android:textSize="@dimen/common_text_size"
-                tools:text="Track Name" />
-
-            <TextView
-                android:id="@+id/track_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:maxLines="1"
-                android:textColor="@color/item_track_description_text_color"
-                android:textSize="@dimen/addition_text_size"
-                tools:text="Artist Name &#8226; 1:00" />
-        </LinearLayout>
-
-        <ImageView
+        <TextView
+            android:id="@+id/track_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/track_item_icon_margin_vertical"
-            android:layout_marginStart="@dimen/track_item_icon_margin_start"
+            android:layout_marginTop="1dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/item_track_description_text_color"
+            android:textSize="@dimen/addition_text_size"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/track_artwork_image"
+            app:layout_constraintEnd_toStartOf="@+id/track_time"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/track_title"
+            app:layout_constraintTop_toBottomOf="@+id/track_title"
+            tools:text="Artist very-very-very-very-very-very-very long Name" />
+
+        <TextView
+            android:id="@+id/track_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@color/item_track_description_text_color"
+            android:textSize="@dimen/addition_text_size"
+            app:layout_constraintBaseline_toBaselineOf="@+id/track_artist"
+            app:layout_constraintEnd_toStartOf="@+id/iv_arrow"
+            app:layout_constraintStart_toEndOf="@+id/track_artist"
+            tools:text=" &#8226; 1:00" />
+
+        <ImageView
+            android:id="@+id/iv_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/track_item_icon_margin_end"
             android:src="@drawable/ic_arrow_forward"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/item_track_icon_color" />
-    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
