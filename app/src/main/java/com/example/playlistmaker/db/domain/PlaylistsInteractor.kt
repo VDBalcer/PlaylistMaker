@@ -19,6 +19,13 @@ interface PlaylistsInteractor {
         coverIm: Uri = Uri.EMPTY,
     ): Int
 
+    suspend fun updatePlaylist(
+        playlistId: Int,
+        playlistName: String,
+        playlistDescription: String,
+        coverIm: Uri = Uri.EMPTY,
+    )
+
     suspend fun deletePlaylist(playlistId: Int)
 
     suspend fun addTrackToPlaylist(track: Track, playlist: Playlist)

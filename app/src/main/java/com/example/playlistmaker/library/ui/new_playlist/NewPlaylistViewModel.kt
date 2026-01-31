@@ -11,15 +11,17 @@ import com.example.playlistmaker.library.ui.model.FormState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(
+open class NewPlaylistViewModel(
     private val playlistInteractor: PlaylistsInteractor,
     private val formValidator: PlaylistCreationValidator,
 ) : ViewModel() {
 
-    private val _state =
+    protected val _state =
         MutableLiveData<FormState>(FormState.Default)
-
     fun observeFormState(): LiveData<FormState> = _state
+
+    protected val _closeScreenEvent = SingleLiveEvent<Unit>()
+    val closeScreenEvent: LiveData<Unit> = _closeScreenEvent
 
 
     fun updateState(
@@ -47,6 +49,7 @@ class NewPlaylistViewModel(
                 playlistDescription = _state.value!!.description,
                 coverIm = _state.value!!.im
             )
+            _closeScreenEvent.postValue(Unit)
         }
     }
 }

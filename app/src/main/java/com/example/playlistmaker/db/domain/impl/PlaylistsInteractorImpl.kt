@@ -42,6 +42,24 @@ class PlaylistsInteractorImpl(
         return repository.createPlaylist(updated)
     }
 
+    override suspend fun updatePlaylist(
+        playlistId: Int,
+        playlistName: String,
+        playlistDescription: String,
+        coverIm: Uri,
+    ) {
+        val playlist = repository.getById(playlistId).first()
+        playlist.name = playlistName
+        playlist.description = playlistDescription
+        if (coverIm != playlist.coverIm) {
+            imageStorage.deleteImage(playlist.coverIm)
+            playlist.coverIm = imageStorage.saveImage(coverIm)
+        } else {
+            playlist.coverIm
+        }
+        return repository.updatePlaylist(playlist)
+    }
+
     override suspend fun deletePlaylist(playlistId: Int) {
         withContext(Dispatchers.IO) {
             val playlist = repository.getById(playlistId).first()

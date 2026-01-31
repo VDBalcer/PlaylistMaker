@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -14,8 +13,8 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistScreenBinding
-import com.example.playlistmaker.library.domain.model.Playlist
 import com.example.playlistmaker.library.ui.favorite.FavoriteFragment.Companion.CLICK_DEBOUNCE_DELAY
+import com.example.playlistmaker.library.ui.new_playlist.EditPlaylistFragment
 import com.example.playlistmaker.library.ui.playlist_screen.model.PlaylistScreenState
 import com.example.playlistmaker.player.ui.TrackPlayerFragment
 import com.example.playlistmaker.search.domain.model.Track
@@ -23,7 +22,6 @@ import com.example.playlistmaker.search.ui.TrackAdapter
 import com.example.playlistmaker.utils.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistScreenFragment : Fragment() {
@@ -81,6 +79,11 @@ class PlaylistScreenFragment : Fragment() {
                 playlistTitle.text = state.playlist.name
                 playlistDescription.text = state.playlist.description
                 playlistInfo.text = getPlaylistInfo(state)
+                Glide.with(this@PlaylistScreenFragment)
+                    .load(state.playlist.coverIm)
+                    .placeholder(R.drawable.track_placeholder)
+                    .fitCenter()
+                    .into(playlistCoverIm)
             }
 
             isTracksEmpty = state.tracks.isEmpty()
@@ -148,9 +151,16 @@ class PlaylistScreenFragment : Fragment() {
                 findNavController().popBackStack()
             }
             .create()
-        binding.deletePlaylist.setOnClickListener{
+        binding.deletePlaylist.setOnClickListener {
             confirmDialog.show()
         }
+        binding.editPlaylist.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_playlistScreenFragment_to_editPlaylistFragment,
+                EditPlaylistFragment.createArgs(playlistId)
+            )
+        }
+
 
     }
 

@@ -65,7 +65,7 @@ class PlaylistsRepositoryImpl(
 
     override suspend fun updatePlaylist(newPlaylist: Playlist) {
         val entity = playlistDbConvertor.map(newPlaylist)
-        playlistDao.insertNewPlaylist(entity)
+        playlistDao.updatePlaylist(entity)
     }
 
     override suspend fun deletePlaylist(playlistId: Int) {
