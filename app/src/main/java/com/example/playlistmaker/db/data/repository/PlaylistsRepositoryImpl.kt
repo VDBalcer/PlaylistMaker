@@ -11,6 +11,7 @@ import com.example.playlistmaker.search.domain.model.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class PlaylistsRepositoryImpl(
@@ -38,14 +39,15 @@ class PlaylistsRepositoryImpl(
                 playlistDbConvertor.map(playlistEntity)
             }
 
-    override fun getTracksByIds(ids: List<Int>): Flow<List<Track>> =
-        trackDao
-            .getTracksByIds(ids)
-            .map { tracksList ->
-                tracksList.map { trackEntity ->
-                    trackDbConvertor.map(trackEntity)
-                }
+    override fun getTracksByIds(ids: List<Int>): Flow<List<Track>> {
+        return trackDao.getTracksByIds(ids).map { entities ->
+            val tracks = entities.map { trackDbConvertor.map(it) }
+
+            tracks.sortedBy { track ->
+                ids.indexOf(track.trackId)
             }
+        }
+    }
 
     override suspend fun createPlaylist(newPlaylist: Playlist): Int {
         require(newPlaylist.id == null) {

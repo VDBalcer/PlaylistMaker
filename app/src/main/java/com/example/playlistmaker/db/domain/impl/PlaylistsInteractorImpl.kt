@@ -85,7 +85,7 @@ class PlaylistsInteractorImpl(
     override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist) {
         withContext(Dispatchers.IO) {
             repository.addTrack(track)
-            playlist.idsList += track.trackId
+            playlist.idsList = listOf(track.trackId) + playlist.idsList
             playlist.tracksCount += 1
             repository.updatePlaylist(playlist)
         }
