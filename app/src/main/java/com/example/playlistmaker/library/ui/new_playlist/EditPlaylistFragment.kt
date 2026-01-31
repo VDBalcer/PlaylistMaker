@@ -79,14 +79,6 @@ class EditPlaylistFragment : NewPlaylistFragment() {
 
         viewModel.closeScreenEvent.observe(viewLifecycleOwner) {
             findNavController().popBackStack()
-            Toast.makeText(
-                context,
-                getString(
-                    R.string.new_playlist_update_message,
-                    binding.playlistNameInputEditText.text
-                ),
-                Toast.LENGTH_SHORT
-            ).show()
         }
 
         requireActivity()
