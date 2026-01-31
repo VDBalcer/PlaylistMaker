@@ -24,7 +24,7 @@ class EditPlaylistFragment : NewPlaylistFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.createPlaylistButton.setText("Сохранить")
+        binding.createPlaylistButton.setText(getString(R.string.edit_playlist_button_text))
 
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->

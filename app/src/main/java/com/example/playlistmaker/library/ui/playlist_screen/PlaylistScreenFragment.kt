@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -61,8 +63,9 @@ class PlaylistScreenFragment : Fragment() {
                 TrackPlayerFragment.createArgs(track)
             )
         }
+        val contextWrapper = ContextThemeWrapper(requireContext(), R.style.FixedAlertDialogTheme)
         onTrackLongClick = { track: Track ->
-            MaterialAlertDialogBuilder(requireContext())
+            MaterialAlertDialogBuilder(contextWrapper)
                 .setTitle(getString(R.string.remove_track_dialog_title))
                 .setNegativeButton(getString(R.string.remove_track_dialog_negative_text), null)
                 .setPositiveButton(getString(R.string.remove_track_dialog_positive_text)) { _, _ ->
@@ -139,12 +142,15 @@ class PlaylistScreenFragment : Fragment() {
         binding.icMenu.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+        binding.overlay.setOnClickListener{
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
         binding.sharePlaylist.setOnClickListener {
             if (isTracksEmpty) emptyListToast.show()
             else viewModel.onSharePlaylistClicked(playlistId)
         }
-        val confirmDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Хотите удалить плейлист?")
+        val confirmDialog = MaterialAlertDialogBuilder(contextWrapper)
+            .setTitle(getString(R.string.remove_track_dialog_title_text))
             .setNegativeButton(getString(R.string.remove_track_dialog_negative_text), null)
             .setPositiveButton(getString(R.string.remove_track_dialog_positive_text)) { _, _ ->
                 viewModel.deletePlaylist(playlistId)
@@ -161,7 +167,19 @@ class PlaylistScreenFragment : Fragment() {
             )
         }
 
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? AppCompatActivity)?.supportActionBar?.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as? AppCompatActivity)?.supportActionBar?.show()
     }
 
     private fun getPlaylistInfo(state: PlaylistScreenState): String {

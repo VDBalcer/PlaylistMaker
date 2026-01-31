@@ -9,6 +9,7 @@ import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -71,7 +72,8 @@ open class NewPlaylistFragment : Fragment() {
             binding.createPlaylistButton.isEnabled = it.createButtonEnabled
         }
 
-        confirmDialog = MaterialAlertDialogBuilder(requireContext())
+        val contextWrapper = ContextThemeWrapper(requireContext(), R.style.FixedAlertDialogTheme)
+        confirmDialog = MaterialAlertDialogBuilder(contextWrapper)
             .setTitle(getString(R.string.new_playlist_dialog_title))
             .setMessage(getString(R.string.new_playlist_dialog_message))
             .setNeutralButton(getString(R.string.new_playlist_dialog_neutral_button_text), null)

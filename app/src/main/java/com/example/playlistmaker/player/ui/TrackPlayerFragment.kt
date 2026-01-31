@@ -126,6 +126,9 @@ class TrackPlayerFragment : Fragment() {
         binding.addTrackButton.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+        binding.overlay.setOnClickListener{
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
         binding.placeholderButton.setOnClickListener {
             findNavController().navigate(
                 R.id.action_trackPlayerFragment_to_newPlaylistFragment

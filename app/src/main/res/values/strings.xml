@@ -63,4 +63,9 @@
     <string name="remove_track_dialog_positive_text">Да</string>
     <string name="empty_playlist_toast_text">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <string name="new_playlist_update_message">Плейлист %1$s успешно обновлен!</string>
+    <string name="remove_track_dialog_title_text">Хотите удалить плейлист?</string>
+    <string name="edit_playlist_button_text">Сохранить</string>
+    <string name="playlist_share_text">Поделиться</string>
+    <string name="playlist_edit_playlist_text">Редактировать информацию</string>
+    <string name="playlist_delete_text">Удалить плейлист</string>
 </resources>

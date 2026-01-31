@@ -15,6 +15,15 @@
             android:layout_height="match_parent"
             android:background="@color/light_gray">
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/transparent"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:title=""
+                app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/playlist_cover_im"
                 android:layout_width="0dp"
@@ -33,7 +42,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="4dp"
                 android:fontFamily="@font/ys_display_medium"
-                android:textColor="?attr/colorOnSecondary"
+                android:textColor="@color/black"
                 android:textFontWeight="700"
                 android:textSize="24sp"
                 app:layout_constraintTop_toBottomOf="@+id/playlist_cover_im"
@@ -46,7 +55,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="4dp"
                 android:fontFamily="@font/ys_display_regular"
-                android:textColor="?attr/colorOnSecondary"
+                android:textColor="@color/black"
                 android:textFontWeight="400"
                 android:textSize="18sp"
                 app:layout_constraintTop_toBottomOf="@+id/playlist_title"
@@ -59,7 +68,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="4dp"
                 android:fontFamily="@font/ys_display_regular"
-                android:textColor="?attr/colorOnSecondary"
+                android:textColor="@color/black"
                 android:textFontWeight="400"
                 android:textSize="18sp"
                 app:layout_constraintTop_toBottomOf="@+id/playlist_description"
@@ -74,7 +83,8 @@
                 android:src="@drawable/ic_share"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/playlist_info" />
+                app:layout_constraintTop_toBottomOf="@id/playlist_info"
+                app:tint="@color/black" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ic_menu"
@@ -85,12 +95,13 @@
                 android:src="@drawable/ic_menu"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toEndOf="@+id/ic_share"
-                app:layout_constraintTop_toBottomOf="@id/playlist_info" />
+                app:layout_constraintTop_toBottomOf="@id/playlist_info"
+                app:tint="@color/black" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/playlists_bottom_sheet"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
                 app:behavior_hideable="false"
                 app:cardBackgroundColor="?attr/colorSecondary"
@@ -114,9 +125,10 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/tracks_recycler_bottom_sheet"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/item_track" />
+                        tools:listitem="@layout/item_track"
+                        tools:itemCount="2"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -137,7 +149,8 @@
         app:behavior_peekHeight="auto"
         app:cardBackgroundColor="?attr/colorSecondary"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        app:shapeAppearanceOverlay="@style/BottomSheetRoundedShape">
+        app:shapeAppearanceOverlay="@style/BottomSheetRoundedShape"
+        tools:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -153,7 +166,7 @@
 
             <include
                 android:id="@+id/item_playlist_horizontal"
-            layout="@layout/item_playlist_horizontal"
+                layout="@layout/item_playlist_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp" />
@@ -161,17 +174,17 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/share_playlist"
                 style="@style/SettingItemTextView"
-                android:text="Поделиться" />
+                android:text="@string/playlist_share_text" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/edit_playlist"
                 style="@style/SettingItemTextView"
-                android:text="Редактировать информацию" />
+                android:text="@string/playlist_edit_playlist_text" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/delete_playlist"
                 style="@style/SettingItemTextView"
-                android:text="Удалить плейлист" />
+                android:text="@string/playlist_delete_text" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
