@@ -21,4 +21,9 @@ class ResourceProviderImpl(
 
     override fun getTermsLink(): String =
         context.getString(R.string.terns_uri)
+
+    override fun getTrackCountString(count: Int): String {
+        return context.resources.getQuantityString(R.plurals.track_count, count, count)
+    }
+
 }

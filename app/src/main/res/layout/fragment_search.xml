@@ -43,7 +43,7 @@
             android:paddingEnd="40dp"
             android:singleLine="true"
             android:textColor="@color/black"
-            android:textColorHint="@color/gray"
+            android:textColorHint="@color/search_text_hint_color"
             android:textSize="@dimen/common_text_size" />
     </com.google.android.material.textfield.TextInputLayout>
 

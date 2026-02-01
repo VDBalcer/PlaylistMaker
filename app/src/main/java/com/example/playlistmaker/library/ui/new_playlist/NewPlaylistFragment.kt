@@ -9,6 +9,7 @@ import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -20,11 +21,11 @@ import com.example.playlistmaker.search.ui.dpToPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewPlaylistFragment : Fragment() {
+open class NewPlaylistFragment : Fragment() {
     private val viewModel: NewPlaylistViewModel by viewModel()
 
-    private var _binding: PlaylistCreationBinding? = null
-    private val binding get() = _binding!!
+    protected var _binding: PlaylistCreationBinding? = null
+    protected val binding get() = _binding!!
 
     private var confirmDialog: AlertDialog? = null
     private var isPhotoSelected = false
@@ -46,6 +47,7 @@ class NewPlaylistFragment : Fragment() {
                 if (uri != null) {
                     Glide.with(this)
                         .load(uri)
+                        .placeholder(R.drawable.track_placeholder)
                         .fitCenter()
                         .transform(RoundedCorners(dpToPx(ARTWORK_RADIUS, requireContext())))
                         .into(binding.addPhotoIm)
@@ -70,7 +72,8 @@ class NewPlaylistFragment : Fragment() {
             binding.createPlaylistButton.isEnabled = it.createButtonEnabled
         }
 
-        confirmDialog = MaterialAlertDialogBuilder(requireContext())
+        val contextWrapper = ContextThemeWrapper(requireContext(), R.style.FixedAlertDialogTheme)
+        confirmDialog = MaterialAlertDialogBuilder(contextWrapper)
             .setTitle(getString(R.string.new_playlist_dialog_title))
             .setMessage(getString(R.string.new_playlist_dialog_message))
             .setNeutralButton(getString(R.string.new_playlist_dialog_neutral_button_text), null)
@@ -97,6 +100,9 @@ class NewPlaylistFragment : Fragment() {
 
         binding.createPlaylistButton.setOnClickListener {
             viewModel.createPlaylist()
+        }
+
+        viewModel.closeScreenEvent.observe(viewLifecycleOwner) {
             findNavController().popBackStack()
             Toast.makeText(
                 context,

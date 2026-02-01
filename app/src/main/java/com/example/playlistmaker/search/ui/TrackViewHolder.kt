@@ -13,18 +13,15 @@ import com.example.playlistmaker.search.domain.model.Track
 
 class TrackViewHolder(
     private val binding: ItemTrackBinding,
-    val onTrackClick: (Track) -> Unit = {}
+    val onTrackClick: (Track) -> Unit = {},
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: Track) {
         binding.trackTitle.text = item.trackName
 
-        binding.trackDescription.text =
-            itemView.context.getString(
-                R.string.track_descriptor,
-                item.artistName,
-                item.trackTime
-            )
+        binding.trackArtist.text = item.artistName
+        binding.trackTime.text =
+            itemView.context.getString(R.string.track_descriptor, item.trackTime)
         val cornerRadius = dpToPx(CORNER_RADIUS, itemView.context)
         Glide.with(itemView)
             .load(item.artworkUrl100)

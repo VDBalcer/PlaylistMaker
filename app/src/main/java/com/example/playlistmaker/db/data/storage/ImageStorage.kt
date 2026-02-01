@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
-import androidx.core.net.toFile
 import java.io.File
 import java.io.FileOutputStream
 
@@ -33,8 +32,9 @@ class ImageStorage(private val context: Context) {
         return Uri.fromFile(file)
     }
 
-    fun deleteImage(path: Uri) {
-        val file = path.toFile()
+    fun deleteImage(uri: Uri) {
+        val pathString = uri.path ?: return
+        val file = File(pathString)
         if (file.exists()) {
             file.delete()
         }

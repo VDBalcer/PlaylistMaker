@@ -12,7 +12,7 @@
     <string name="write_support_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="terns_uri">https://yandex.ru/legal/practicum_offer/</string>
     <string name="search_hint">Поиск</string>
-    <string name="track_descriptor">%1$s • %2$s</string>
+    <string name="track_descriptor">• %1$s</string>
     <string name="refresh">Обновить</string>
     <string name="not_found">Ничего не нашлось</string>
     <string name="internet_error_title">Проблемы со связью</string>
@@ -51,4 +51,22 @@
         <item quantity="many">%1$d треков</item>
         <item quantity="other">%1$d треков</item>
     </plurals>
+    <plurals name="minutes_count">
+        <item quantity="one">%1$d минута</item>
+        <item quantity="few">%1$d минуты</item>
+        <item quantity="many">%1$d минут</item>
+        <item quantity="other">%1$d минут</item>
+    </plurals>
+    <string name="playlist_descriptor">%1$s • %2$s</string>
+    <string name="remove_track_dialog_title">Хотите удалить трек?</string>
+    <string name="remove_track_dialog_negative_text">Нет</string>
+    <string name="remove_track_dialog_positive_text">Да</string>
+    <string name="empty_playlist_toast_text">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="new_playlist_update_message">Плейлист %1$s успешно обновлен!</string>
+    <string name="remove_track_dialog_title_text">Хотите удалить плейлист?</string>
+    <string name="edit_playlist_button_text">Сохранить</string>
+    <string name="playlist_share_text">Поделиться</string>
+    <string name="playlist_edit_playlist_text">Редактировать информацию</string>
+    <string name="playlist_delete_text">Удалить плейлист</string>
+    <string name="playlist_no_added_tracks_placeholder_description">Отсутствуют треки в плейлисте</string>
 </resources>

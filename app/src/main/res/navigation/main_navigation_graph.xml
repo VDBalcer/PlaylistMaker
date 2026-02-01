@@ -25,6 +25,12 @@
         <action
             android:id="@+id/action_libraryFragment_to_newPlaylistFragment"
             app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_playlistScreenFragment"
+            app:destination="@id/playlistScreenFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_self"
+            app:destination="@id/libraryFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -45,13 +51,34 @@
         android:name="com.example.playlistmaker.library.ui.favorite.FavoriteFragment"
         android:label="fragment_library_favorite"
         tools:layout="@layout/fragment_library_favorite" >
-        <action
-            android:id="@+id/action_favoriteFragment_to_trackPlayerFragment"
-            app:destination="@id/trackPlayerFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/newPlaylistFragment"
         android:name="com.example.playlistmaker.library.ui.new_playlist.NewPlaylistFragment"
         android:label="@string/playlist_creation_title"
         tools:layout="@layout/playlist_creation" />
+    <fragment
+        android:id="@+id/playlistScreenFragment"
+        android:name="com.example.playlistmaker.library.ui.playlist_screen.PlaylistScreenFragment"
+        android:label=""
+        tools:layout="@layout/fragment_playlist_screen" >
+        <action
+            android:id="@+id/action_playlistScreenFragment_to_trackPlayerFragment"
+            app:destination="@id/trackPlayerFragment" />
+        <action
+            android:id="@+id/action_playlistScreenFragment_to_editPlaylistFragment"
+            app:destination="@id/editPlaylistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistsFragment"
+        android:name="com.example.playlistmaker.library.ui.playlists.PlaylistsFragment"
+        android:label="fragment_library_playlists"
+        tools:layout="@layout/fragment_library_playlists" >
+    </fragment>
+    <fragment
+        android:id="@+id/editPlaylistFragment"
+        android:name="com.example.playlistmaker.library.ui.new_playlist.EditPlaylistFragment"
+        android:label="Редактировать"
+        tools:layout="@layout/playlist_creation"/>
 </navigation>

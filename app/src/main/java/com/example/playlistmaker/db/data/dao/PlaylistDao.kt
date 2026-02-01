@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.playlistmaker.db.data.entity.PlaylistEntity;
 import com.example.playlistmaker.db.data.entity.TrackEntity
 import kotlinx.coroutines.flow.Flow
@@ -16,10 +17,13 @@ interface PlaylistDao {
     fun getPlaylists(): Flow<List<PlaylistEntity>>
 
     @Query("SELECT * FROM playlists_table WHERE playlistId = :id")
-    fun getById(id: Int): Flow<PlaylistEntity>
+    fun getPlaylistById(id: Int): Flow<PlaylistEntity>
 
     @Insert(entity = PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
     fun insertNewPlaylist(playlistEntity: PlaylistEntity): Long
+
+    @Update(entity = PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    fun updatePlaylist(playlist: PlaylistEntity)
 
     @Query("DELETE FROM playlists_table WHERE playlistId = :playlistId")
     fun deletePlaylistById(playlistId: Int)
@@ -29,4 +33,7 @@ interface PlaylistDao {
 
     @Delete(entity = TrackEntity::class)
     fun deleteTrackEntity(trackEntity: TrackEntity)
+
+    @Query("SELECT idsList FROM playlists_table")
+    fun getAllTracksInPlaylists(): List<String>
 }

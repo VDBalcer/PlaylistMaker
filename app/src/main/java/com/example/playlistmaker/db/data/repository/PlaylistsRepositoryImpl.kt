@@ -3,18 +3,23 @@ package com.example.playlistmaker.db.data.repository
 import com.example.playlistmaker.db.data.converters.PlaylistDbConvertor
 import com.example.playlistmaker.db.data.converters.TrackDbConvertor
 import com.example.playlistmaker.db.data.dao.PlaylistDao
+import com.example.playlistmaker.db.data.dao.TrackDao
 import com.example.playlistmaker.db.data.entity.PlaylistEntity
 import com.example.playlistmaker.db.domain.PlaylistsRepository
 import com.example.playlistmaker.library.domain.model.Playlist
 import com.example.playlistmaker.search.domain.model.Track
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class PlaylistsRepositoryImpl(
     private val playlistDao: PlaylistDao,
     private val playlistDbConvertor: PlaylistDbConvertor,
-    private val trackDbConvertor: TrackDbConvertor
+    private val trackDbConvertor: TrackDbConvertor,
+    private val trackDao: TrackDao,
+    private val gson: Gson,
 ) : PlaylistsRepository {
 
 
@@ -27,9 +32,21 @@ class PlaylistsRepositoryImpl(
                 }
             }
 
-    override suspend fun getById(id: Int): Playlist? {
-        val entity = playlistDao.getById(id).firstOrNull() ?: return null
-        return playlistDbConvertor.map(entity)
+    override fun getById(id: Int): Flow<Playlist> =
+        playlistDao
+            .getPlaylistById(id)
+            .map { playlistEntity ->
+                playlistDbConvertor.map(playlistEntity)
+            }
+
+    override fun getTracksByIds(ids: List<Int>): Flow<List<Track>> {
+        return trackDao.getTracksByIds(ids).map { entities ->
+            val tracks = entities.map { trackDbConvertor.map(it) }
+
+            tracks.sortedBy { track ->
+                ids.indexOf(track.trackId)
+            }
+        }
     }
 
     override suspend fun createPlaylist(newPlaylist: Playlist): Int {
@@ -50,7 +67,7 @@ class PlaylistsRepositoryImpl(
 
     override suspend fun updatePlaylist(newPlaylist: Playlist) {
         val entity = playlistDbConvertor.map(newPlaylist)
-        playlistDao.insertNewPlaylist(entity)
+        playlistDao.updatePlaylist(entity)
     }
 
     override suspend fun deletePlaylist(playlistId: Int) {
@@ -58,8 +75,19 @@ class PlaylistsRepositoryImpl(
     }
 
     override suspend fun addTrack(track: Track) {
-            val trackEntity = trackDbConvertor.map(track)
-            playlistDao.insertNewTrack(trackEntity)
+        val trackEntity = trackDbConvertor.map(track)
+        playlistDao.insertNewTrack(trackEntity)
     }
 
+    override suspend fun getAllTracksInPlaylists(): List<Int> {
+        val idsListType = object : TypeToken<List<Int>>() {}.type
+        return playlistDao.getAllTracksInPlaylists().flatMap { json ->
+            val list: List<Int> = gson.fromJson(json, idsListType)
+            list
+        }
+    }
+
+    override suspend fun deleteTrackById(trackId: Int) {
+        trackDao.deleteTrackById(trackId)
+    }
 }
